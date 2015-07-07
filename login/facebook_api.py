@@ -37,7 +37,76 @@ except ImportError:
     from urllib import urlencode
 
 
+class RequestGarph(object):
+
+    def __init__(self, access_token, path, args):
+        self.access_token = access_token
+        self.graph_instance = GraphAPI(self.access_token)
+        self.path = path
+        self.args = args
+
+    def get(self):
+        self._requset(self.path)
+
+    def get_all(self):
+        """
+            getting all data, handle with paging
+        """
+        res = []
+        response = self._requset(self.path)
+        if 'data' in response:
+            res = res + response['data']
+        while self.next_page(response):
+            response = self._requset(self.next_page(response))
+            if 'data' in response:
+                res = res + response['data']
+        return res
+
+    def _requset(self, path, params=None):
+        if not params:
+            params = self.args
+            params['limit'] = 500
+        return self.graph_instance.request(path,params)
+
+    def next_page(self, response):
+
+        if 'paging' in response and 'next' in response['paging']:
+            return response['paging']['next']
+        return False
+
+    def previous_page(self, response):
+        if 'paging' in response and 'previous' in response:
+            return response['paging']['previous']
+        return False
+
+
+def get_user_photos(fb_id, access_token):
+    """
+        return all user photos by access_token
+    """
+    args = {'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
+    res = RequestGarph(access_token, '/me/photos', args).get_all()
+    return res
+
+def get_user_videos(fb_id, access_token):
+    """
+        return all user photos by access_token
+    """
+    args = {'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
+    res = RequestGarph(access_token, '/me/videos', args).get_all()
+    return res
+
+def get_user_posts(fb_id, access_token):
+    """
+        return all user photos by access_token
+    """
+    args = {'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
+    res = RequestGarph(access_token, '/me/posts', args).get_all()
+    return res
+
+
 class GraphAPI(object):
+
     """A client for the Facebook Graph API.
 
     See http://developers.facebook.com/docs/api for complete
@@ -226,10 +295,11 @@ class GraphAPI(object):
                 post_args["access_token"] = self.access_token
             else:
                 args["access_token"] = self.access_token
-
+        if not path.startswith('https://'):
+            path = "https://graph.facebook.com/" + path
         try:
+            print args,post_args
             response = requests.request(method or "GET",
-                                        "https://graph.facebook.com/" +
                                         path,
                                         timeout=self.timeout,
                                         params=args,
@@ -255,22 +325,14 @@ class GraphAPI(object):
                     result["expires"] = query_str["expires"][0]
             else:
                 pass
-                #raise GraphAPIError(response.json())
+                # raise GraphAPIError(response.json())
         else:
             raise GraphAPIError('Maintype was not text, image, or querystring')
 
         if result and isinstance(result, dict) and result.get("error"):
             pass
-            #raise GraphAPIError(result)
+            # raise GraphAPIError(result)
         return result
-
-    def fql(self, query):
-        """FQL query.
-
-        Example query: "SELECT affiliations FROM user WHERE uid = me()"
-
-        """
-        return self.request(self.version + "/" + "fql", {"q": query})
 
     def get_app_access_token(self, app_id, app_secret):
         """Get the application's access token as a string."""
@@ -300,7 +362,7 @@ class GraphAPI(object):
         """
         Extends the expiration time of a valid OAuth access token. See
         <https://developers.facebook.com/roadmap/offline-access-removal/
-        #extend_token>
+        # extend_token>
 
         """
         args = {
@@ -312,8 +374,24 @@ class GraphAPI(object):
 
         return self.request("oauth/access_token", args=args)
 
+    def validate_access_token(self):
+        """
+            Validate access token with Graph API
+        """
+        params = {}
+        params['input_token'] = self.access_token
+        res = self.request(
+            '/debug_token',
+            args=params
+        )
+        res = res['data']
+        if 'is_valid' in res:
+            return bool(res['is_valid'])
+        return False
+
 
 class GraphAPIError(Exception):
+
     def __init__(self, result):
         self.result = result
         try:
@@ -420,7 +498,6 @@ def auth_url(app_id, canvas_url, perms=None, **kwargs):
         kvps['scope'] = ",".join(perms)
     kvps.update(kwargs)
     return url + urlencode(kvps)
-
 
 
 def get_access_token_from_code(code, redirect_uri, app_id, app_secret):
