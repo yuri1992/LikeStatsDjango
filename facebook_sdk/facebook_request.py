@@ -13,7 +13,7 @@ class GraphAPIRequest(object):
         Graph Api Request Object
     """
 
-    def __init__(self, access_token, path, args):
+    def __init__(self, access_token, path, args={}):
         self.path = path
         self.access_token = access_token
         self.args = args
@@ -47,7 +47,7 @@ class GraphAPIRequest(object):
     def _request(self, path=None, args=None, post_args=None, files=None,
                  method=None, timeout=60):
 
-        args = args or {}
+        args = args or self.args
 
         if not path:
             path = self.path

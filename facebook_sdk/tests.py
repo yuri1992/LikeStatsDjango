@@ -1,5 +1,8 @@
 from django.test import TestCase
 from .facebook_request import GraphReponse, GraphAPIError, GraphAPIRequest
+from .facebook_login import FacebookLoginHandler
+from login.models import Users
+from mongoengine import connect
 
 
 class MockGraphResponse(object):
@@ -144,3 +147,42 @@ class TestRequestGraph(TestCase):
         )
         self.assertFalse(res.previous_page)
         self.assertFalse(res.next_page)
+
+
+class TestLoginHandler(TestCase):
+
+    def setUp(self):
+        self.login = FacebookLoginHandler({})
+
+    def test_auth_url(self):
+        url = self.login.get_login_url()
+        self.assertEqual(
+            "https://www.facebook.com/dialog/oauth?scope=user_likes%2Cuser_photos%2Cuser_status%2Cuser_videos%2Cuser_posts%2Cpublish_actions&redirect_uri=http%3A%2F%2Flocal.ynet.co.il%3A8080%2Flogin%2F&client_id=1649266495305734", url)
+
+    def test_access_token_from_code(self):
+        access_token = self.login.get_access_token_from_code(0)
+        self.assertDictEqual(
+            {
+                u'error': {
+                    u'message': u'Missing redirect_uri parameter.',
+                    u'code': 191, u'type': u'OAuthException'}
+            },
+            access_token)
+
+        access_token = self.login.get_access_token_from_code(
+            r"AQABWZpImDWkZbshde6arYqyHHkIyOgQfSPVtC67m_ZR6Yr0xEYO5Uuws-gYjxOHAcZzocvooxF2jzadmy4OlUjp-qOIbI1X7yfxy6DDfrDx-b-1xTAGiV6unptZ4CTLThF9PCa1sel0UnegP0dpmUTnLLC10DZ7eD02xAhQy6yMd8erFB_Uf10DAbqVZDXANU72IqNnNrl8O-A1RVLyzcKW_hwo-lMk5824sFobZTCDnT3U2L1-BNjL7nwZQth15SQdaFfJ3RsP0DVhClxaRbymG2gCQRAudUVDgNkeA2UJUD9Hrqf30MIs2NAK9A1vkAI#_=_")
+        self.assertEqual("", access_token)
+
+    def test_on_new_user(self):
+
+        connect('test', host='mongodb://localhost/test')
+        user_obj = {
+            'user_data': {
+                'id': 123123123,
+                'name': 'Unit Test',
+                'email': 'unit@test.com',
+            },
+            'access_token': 'unittest',
+            'expires':  12312
+        }
+        self.login.on_new_user(user_obj)

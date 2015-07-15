@@ -2,6 +2,7 @@ from django.conf import settings
 from login.models import Users
 from .facebook_request import GraphAPIRequest
 from .facebook_helper import GraphAPIHelper
+from urllib import urlencode
 import tasks
 
 
@@ -34,24 +35,25 @@ class FacebookLoginHandler(object):
                 res['user_data'] = GraphAPIRequest(
                     access_token, '/me').get().response
 
+                self._set_login_session(res)
                 if not Users.objects.filter(fb_id=res['user_data']['id']):
                     self.on_new_user(res)
-                self._set_login_session(res)
                 return True
         return False
 
     def on_new_user(self, data):
-        self._create_user(data)
         self._register_tasks(data)
+        self._create_user(data)
 
     def _create_user(self, data):
         fb_id = data['user_data']['id']
-        del data['user_data']['id']
+        user_data = data['user_data']
+        del user_data['id']
         Users.objects.create(
             fb_id=fb_id,
             access_token=getattr(data, 'access_token', None),
             access_token_expires=getattr(data, 'expires', 0),
-            **data['user_data']
+            **user_data
         )
 
     def _user_exsits(self, fb_id):
@@ -85,7 +87,6 @@ class FacebookLoginHandler(object):
             'client_id': settings.FACEBOOK_APP_ID,
             'redirect_uri': settings.URL_SITE,
         }
-        if perms:
-            kvps['scope'] = ",".join(settings.SCOPE_PREMISSON)
-        kvps.update(kwargs)
+        kvps['scope'] = ",".join(settings.SCOPE_PREMISSON)
+
         return url + urlencode(kvps)
