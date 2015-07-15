@@ -11,14 +11,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-<<<<<<< HEAD
+
 BASE_DIR = os.path.join(os.path.dirname(__file__), '..')
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
 
-=======
-BASE_DIR = os.path.join(os.path.dirname(__file__), '..', '..')
-PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
->>>>>>> bdc7b87baa7c871d8ddc960065d07edba733ddc0
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -37,11 +33,9 @@ TEMPLATE_DIRS = (
     PROJECT_ROOT + '/templates/',
 )
 
-<<<<<<< HEAD
+
 URL_SITE = "http://local.ynet.co.il:8080/login/"
-=======
-URL_SITE = "http://local.ynet.co.il:8002/login"
->>>>>>> bdc7b87baa7c871d8ddc960065d07edba733ddc0
+
 
 SCOPE_PREMISSON = [
     'user_likes',
@@ -70,13 +64,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-<<<<<<< HEAD
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-=======
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
->>>>>>> bdc7b87baa7c871d8ddc960065d07edba733ddc0
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
