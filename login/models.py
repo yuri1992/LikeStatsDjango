@@ -6,6 +6,7 @@ class Count(mongoengine.EmbeddedDocument):
 
 
 class LikeBase(mongoengine.EmbeddedDocument):
+<<<<<<< HEAD
     pic_small = mongoengine.URLField(null=True)
     name = mongoengine.StringField(null=True)
     can_post = mongoengine.BooleanField(null=True)
@@ -49,6 +50,47 @@ class Post(mongoengine.EmbeddedDocument):
 
 
 class Users(mongoengine.DynamicDocument):
+=======
+    pic_small = mongoengine.URLField()
+    name = mongoengine.StringField()
+    can_post = mongoengine.StringField()
+    id = mongoengine.IntField()
+
+
+class Likes(mongoengine.EmbeddedDocument):
+    data = mongoengine.ListField()
+    summary = mongoengine.EmbeddedDocumentField(Count)
+    cursors = mongoengine.StringField()
+    paging = mongoengine.StringField()
+
+
+class Photo(mongoengine.EmbeddedDocument):
+    id = mongoengine.IntField()
+    picture = mongoengine.URLField()
+    name = mongoengine.StringField()
+    created_time = mongoengine.StringField()
+    #likes = mongoengine.EmbeddedDocumentListField(Likes)
+    likes = mongoengine.ListField()
+
+
+class Video(mongoengine.EmbeddedDocument):
+    id = mongoengine.IntField()
+    picture = mongoengine.URLField()
+    name = mongoengine.StringField()
+    created_time = mongoengine.StringField()
+    likes = mongoengine.EmbeddedDocumentListField(Likes)
+
+
+class Post(mongoengine.EmbeddedDocument):
+    id = mongoengine.IntField()
+    picture = mongoengine.URLField()
+    name = mongoengine.StringField()
+    created_time = mongoengine.StringField()
+    likes = mongoengine.EmbeddedDocumentListField(Likes)
+
+
+class Users(mongoengine.Document):
+>>>>>>> bdc7b87baa7c871d8ddc960065d07edba733ddc0
     fb_id = mongoengine.IntField()
     email = mongoengine.EmailField()
     birthday = mongoengine.StringField()
