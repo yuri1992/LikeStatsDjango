@@ -47,7 +47,8 @@ class GraphAPIRequest(object):
     def _request(self, path=None, args=None, post_args=None, files=None,
                  method=None, timeout=60):
 
-        args = args or self.args
+        if not args:
+            args = self.args
 
         if not path:
             path = self.path
@@ -61,6 +62,7 @@ class GraphAPIRequest(object):
             else:
                 args["access_token"] = self.access_token
 
+        print method,path,self.access_token
         if not path.startswith('https://'):
             path = "https://graph.facebook.com/" + path
         try:

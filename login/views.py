@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.shortcuts import render_to_response
 from facebook_sdk.facebook_login import FacebookLoginHandler
 from mongoengine import connect
-
+import tasks
 connect('test', host='mongodb://localhost/test')
 
 
@@ -17,4 +17,6 @@ class Login(ListView):
             return render_to_response('login.html', res)
         else:
             res = {}
+            #tasks.fetch_photos_data.apply_async([login_status.user_data.fb_id])
+            tasks.fetch_photos_data(login_status.user_data.fb_id)
             return render_to_response('user.html', res)

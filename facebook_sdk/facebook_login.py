@@ -9,8 +9,13 @@ import tasks
 class FacebookLoginHandler(object):
 
     def __init__(self, request):
-        self._request = request
+        self._request = request 
+        self._user_data = {}
 
+    @property
+    def user_data(self):
+        return self._user_data
+    
     def is_login(self):
         if self._login_with_session():
             return True
@@ -21,8 +26,9 @@ class FacebookLoginHandler(object):
     def _login_with_session(self):
         fb_id = self._request.session.get('fb_id', None)
         access_token = self._request.session.get('access_token', None)
-
-        if fb_id and access_token and self._user_exsits(fb_id):
+        user = self.get_user(fb_id)
+        if fb_id and access_token and user:
+            self._user_data = user
             return GraphAPIHelper.validate_access_token(access_token)
         return False
 
@@ -36,8 +42,11 @@ class FacebookLoginHandler(object):
                     access_token, '/me').get().response
 
                 self._set_login_session(res)
-                if not Users.objects.filter(fb_id=res['user_data']['id']):
+                user = self.get_user(res['user_data']['id'])
+                if not user:
                     self.on_new_user(res)
+                    #user = self.get_user(res['user_data']['id'])
+                self._user_data = user
                 return True
         return False
 
@@ -49,6 +58,8 @@ class FacebookLoginHandler(object):
         fb_id = data['user_data']['id']
         user_data = data['user_data']
         del user_data['id']
+        print data
+        print getattr(data, 'access_token', None)
         Users.objects.create(
             fb_id=fb_id,
             access_token=getattr(data, 'access_token', None),
@@ -56,9 +67,10 @@ class FacebookLoginHandler(object):
             **user_data
         )
 
-    def _user_exsits(self, fb_id):
-        if Users.objects.filter(fb_id=fb_id).first():
-            return True
+    def get_user(self, fb_id):
+        user = Users.objects.filter(fb_id=fb_id).first()
+        if user:
+            return user
         return False
 
     def _register_tasks(self, data):

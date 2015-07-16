@@ -130,7 +130,7 @@ class GraphAPIHelper(object):
         """
         args = {
             'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
-        res = GraphRequest(access_token, '/me/photos', args).get_all()
+        res = GraphAPIRequest(access_token, '/me/photos', args).get_all()
         return res
 
     @staticmethod
