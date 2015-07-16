@@ -45,6 +45,7 @@ class Post(mongoengine.EmbeddedDocument):
     picture = mongoengine.URLField()
     name = mongoengine.StringField()
     created_time = mongoengine.StringField()
+    updated_time = mongoengine.StringField()
     likes = mongoengine.DictField()
 
 
@@ -62,3 +63,7 @@ class Users(mongoengine.DynamicDocument):
     photos = mongoengine.EmbeddedDocumentListField(Photo)
     videos = mongoengine.EmbeddedDocumentListField(Video)
     posts = mongoengine.EmbeddedDocumentListField(Post)
+
+
+class RequestsLog(mongoengine.DynamicDocument):
+    url = mongoengine.StringField()

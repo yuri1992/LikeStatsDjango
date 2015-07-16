@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.conf import settings
 from .facebook_request import GraphReponse, GraphAPIError, GraphAPIRequest
 from .facebook_login import FacebookLoginHandler
 from login.models import Users
@@ -122,6 +123,8 @@ class TestGraphResponse(TestCase):
         self.assertTrue(res.previous_page)
         self.assertEqual('link', res.previous_page)
 
+    
+
 
 class TestRequestGraph(TestCase):
 
@@ -148,6 +151,31 @@ class TestRequestGraph(TestCase):
         self.assertFalse(res.previous_page)
         self.assertFalse(res.next_page)
 
+    def test_get_request_erroring(self):
+        args = {
+            'code': '123123123'
+        }
+        res = GraphAPIRequest(None,
+                              "oauth/access_token",
+                              args).get().response
+        self.assertEqual(
+            {u'error': {u'message': u'Missing redirect_uri parameter.',
+                        u'code': 191, u'type': u'OAuthException'}},
+            res
+        )
+        args = {
+            'code': '123123123',
+            'redirect_uri': settings.URL_SITE
+        }
+        res = GraphAPIRequest(None,
+                              "oauth/access_token",
+                              args).get().response
+        self.assertEqual(
+            {u'error': {u'message': u'Missing client_id parameter.',
+                        u'code': 101, u'type': u'OAuthException'}},
+            res
+        )
+
 
 class TestLoginHandler(TestCase):
 
@@ -164,14 +192,19 @@ class TestLoginHandler(TestCase):
         self.assertDictEqual(
             {
                 u'error': {
-                    u'message': u'Missing redirect_uri parameter.',
-                    u'code': 191, u'type': u'OAuthException'}
+                    u'message': u'Invalid verification code format.',
+                    u'code': 100, u'type': u'OAuthException'}
             },
             access_token)
 
         access_token = self.login.get_access_token_from_code(
             r"AQABWZpImDWkZbshde6arYqyHHkIyOgQfSPVtC67m_ZR6Yr0xEYO5Uuws-gYjxOHAcZzocvooxF2jzadmy4OlUjp-qOIbI1X7yfxy6DDfrDx-b-1xTAGiV6unptZ4CTLThF9PCa1sel0UnegP0dpmUTnLLC10DZ7eD02xAhQy6yMd8erFB_Uf10DAbqVZDXANU72IqNnNrl8O-A1RVLyzcKW_hwo-lMk5824sFobZTCDnT3U2L1-BNjL7nwZQth15SQdaFfJ3RsP0DVhClxaRbymG2gCQRAudUVDgNkeA2UJUD9Hrqf30MIs2NAK9A1vkAI#_=_")
-        self.assertEqual("", access_token)
+        self.assertEqual(
+            {
+                u'error': {u'message': u'This authorization code has expired.',
+                           u'code': 100, u'type': u'OAuthException'}
+            },
+            access_token)
 
     def test_on_new_user(self):
 
@@ -185,4 +218,5 @@ class TestLoginHandler(TestCase):
             'access_token': 'unittest',
             'expires':  12312
         }
+        self.assertEqual('unittest', user_obj.get('access_token', None))
         self.login.on_new_user(user_obj)

@@ -1,5 +1,7 @@
 import requests
 import json
+from login.models import RequestsLog
+from mongoengine import connect
 try:
     from urllib.parse import parse_qs, urlencode
 except ImportError:
@@ -39,7 +41,7 @@ class GraphAPIRequest(object):
             next_url = response.next_page
             response = self._request(next_url)
             if 'data' in response.response:
-                res = res + response['data']
+                res = res + response.response['data']
 
         self.response = res
         return self.response
@@ -62,7 +64,6 @@ class GraphAPIRequest(object):
             else:
                 args["access_token"] = self.access_token
 
-        print method,path,self.access_token
         if not path.startswith('https://'):
             path = "https://graph.facebook.com/" + path
         try:
@@ -72,6 +73,15 @@ class GraphAPIRequest(object):
                                         params=args,
                                         data=post_args,
                                         files=files)
+            connect('test', host='mongodb://localhost/test')
+            RequestsLog.objects.create(**{
+                'method': method,
+                'path': path,
+                'timeout': timeout,
+                'params': args,
+                'data': post_args,
+                'files': files
+            })
         except requests.HTTPError as e:
             response = json.loads(e.read())
             raise GraphAPIError(response)

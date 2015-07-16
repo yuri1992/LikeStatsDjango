@@ -17,6 +17,5 @@ class Login(ListView):
             return render_to_response('login.html', res)
         else:
             res = {}
-            #tasks.fetch_photos_data.apply_async([login_status.user_data.fb_id])
-            tasks.fetch_photos_data(login_status.user_data.fb_id)
+            tasks.fetch_all.apply_async([login_status.user_data.fb_id])
             return render_to_response('user.html', res)

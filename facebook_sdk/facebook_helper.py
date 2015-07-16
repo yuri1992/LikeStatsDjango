@@ -129,7 +129,9 @@ class GraphAPIHelper(object):
             return all user photos by access_token
         """
         args = {
-            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
+            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name',
+            'limit': '500'
+        }
         res = GraphAPIRequest(access_token, '/me/photos', args).get_all()
         return res
 
@@ -139,8 +141,10 @@ class GraphAPIHelper(object):
             return all user photos by access_token
         """
         args = {
-            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
-        res = GraphRequest(access_token, '/me/videos', args).get_all()
+            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name',
+            'limit': '500'
+        }
+        res = GraphAPIRequest(access_token, '/me/videos', args).get_all()
         return res
 
     @staticmethod
@@ -149,6 +153,8 @@ class GraphAPIHelper(object):
             return all user photos by access_token
         """
         args = {
-            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name'}
-        res = GraphRequest(access_token, '/me/posts', args).get_all()
+            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name',
+            'limit': '500'
+        }
+        res = GraphAPIRequest(access_token, '/me/posts', args).get_all()
         return res

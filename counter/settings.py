@@ -55,7 +55,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'login',
     'djcelery'
 )
@@ -108,6 +107,4 @@ FACEBOOK_APP_ID = "1649266495305734"
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
 BROKER_URL = 'django://'

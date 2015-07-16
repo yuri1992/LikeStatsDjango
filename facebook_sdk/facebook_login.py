@@ -9,13 +9,13 @@ import tasks
 class FacebookLoginHandler(object):
 
     def __init__(self, request):
-        self._request = request 
+        self._request = request
         self._user_data = {}
 
     @property
     def user_data(self):
         return self._user_data
-    
+
     def is_login(self):
         if self._login_with_session():
             return True
@@ -58,12 +58,11 @@ class FacebookLoginHandler(object):
         fb_id = data['user_data']['id']
         user_data = data['user_data']
         del user_data['id']
-        print data
-        print getattr(data, 'access_token', None)
+
         Users.objects.create(
             fb_id=fb_id,
-            access_token=getattr(data, 'access_token', None),
-            access_token_expires=getattr(data, 'expires', 0),
+            access_token=data.get('access_token', None),
+            access_token_expires=data.get('expires', 0),
             **user_data
         )
 

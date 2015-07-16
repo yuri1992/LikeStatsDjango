@@ -9,15 +9,20 @@ import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'counter.settings')
 
-app = Celery('tasks', broker='django://')
-app.conf.update(BROKER_URL='django://')
-app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app = Celery('tasks', broker_url='mongodb://localhost/broker')
 
+app.config_from_object('django.conf:settings')
 app.conf.update(
-    CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend',
-    CELERYBEAT_SCHEDULER='djcelery.schedulers.DatabaseScheduler'
+    BROKER_URL='mongodb://localhost/broker',
+    CELERYBEAT_SCHEDULER='djcelery.schedulers.DatabaseScheduler',
+    CELERY_RESULT_BACKEND='mongodb://localhost/',
+    CELERY_MONGODB_BACKEND_SETTINGS={
+        'database': 'celery',
+        'taskmeta_collection': 'my_taskmeta_collection',
+    },
+
 )
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
 @app.task
@@ -25,21 +30,35 @@ def fetch_photos_data(fb_id):
     connect('test', host='mongodb://localhost/test')
     user_data = Users.objects.filter(fb_id=fb_id).first()
     if user_data:
-        print user_data.access_token
         data = GraphAPIHelper.get_user_photos(
             fb_id, user_data.access_token)
+        user_data.update(photos=data)
         return data
     return None
 
 
 @app.task
 def fetch_posts_data(fb_id):
-    pass
+    connect('test', host='mongodb://localhost/test')
+    user_data = Users.objects.filter(fb_id=fb_id).first()
+    if user_data:
+        data = GraphAPIHelper.get_user_posts(
+            fb_id, user_data.access_token)
+        user_data.update(posts=data)
+        return data
+    return None
 
 
 @app.task
 def fetch_videos_data(fb_id):
-    pass
+    connect('test', host='mongodb://localhost/test')
+    user_data = Users.objects.filter(fb_id=fb_id).first()
+    if user_data:
+        data = GraphAPIHelper.get_user_videos(
+            fb_id, user_data.access_token)
+        user_data.update(videos=data)
+        return data
+    return None
 
 
 @app.task
