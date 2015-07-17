@@ -40,12 +40,13 @@ class FacebookLoginHandler(object):
                 access_token = res['access_token']
                 res['user_data'] = GraphAPIRequest(
                     access_token, '/me').get().response
+                fb_id = res['user_data']['id']
 
                 self._set_login_session(res)
-                user = self.get_user(res['user_data']['id'])
+                user = self.get_user(fb_id)
                 if not user:
                     self.on_new_user(res)
-                    #user = self.get_user(res['user_data']['id'])
+                    user = self.get_user(fb_id)
                 self._user_data = user
                 return True
         return False

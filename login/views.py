@@ -19,3 +19,4 @@ class Login(ListView):
             res = {}
             tasks.fetch_all.apply_async([login_status.user_data.fb_id])
             return render_to_response('user.html', res)
+

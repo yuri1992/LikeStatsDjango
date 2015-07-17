@@ -4,7 +4,6 @@ from login.models import Users
 from facebook_sdk.facebook_request import GraphAPIRequest
 from facebook_sdk.facebook_helper import GraphAPIHelper
 from mongoengine import connect
-
 import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'counter.settings')
