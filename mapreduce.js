@@ -1,23 +1,54 @@
+
+
 var mapFunction = function() {
-    obj = {
-     'fb_id':this.fb_id,
-     'likes':0,
-     'photos':this.photos
-    }
-    emit(this.fb_id,this.photos)
+    var self = this;
+    
+    this.photos.forEach(function(value) {
+        obj = {
+            'type':'photos',
+            'value':value,
+        }
+        emit(self.fb_id,obj);
+    })
+       this.posts.forEach(function(value) {
+        obj = {
+            'type':'posts',
+            'value':value,
+        }
+        emit(self.fb_id,obj);
+    })
+    this.videos.forEach(function(value) {
+        obj = {
+            'type':'videos',
+            'value':value,
+
+        }
+        emit(self.fb_id,obj);
+    })
 }
-var reduce_ = function(key,values) {
-    sum = 0
-    for (var i in values) {
-        sum += values[i]
-    }
-    return sum
+var reduceFunction = function(key,values) {
+    sum = {
+        'total':0,
+        'photos':0,
+        'videos':0,
+        'posts':0,
+        'top_likers': [],
+        'top_photos': [],
+        'top_posts': [],
+        'top_videos': [],
+    };   
+    values.forEach(function(obj) {
+       sum.total += obj.value.likes.summary.total_count;
+       sum[obj.type] += obj.value.likes.summary.total_count;
+    });
+    return sum;
 }
 
 db.users.mapReduce(
     mapFunction,
-    reduce_,
-   {
-     out: "session_stat",
-   }
-)
+    reduceFunction,
+    {
+      //query:{fb_id:'10205447047469248'},
+      out:'total_likes'
+    }
+);

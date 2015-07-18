@@ -49,6 +49,12 @@ class Post(mongoengine.EmbeddedDocument):
     likes = mongoengine.DictField()
 
 
+
+class UsersQuerySet(mongoengine.QuerySet):
+    def get_total_likes(self):
+        
+
+
 class Users(mongoengine.DynamicDocument):
 
     fb_id = mongoengine.IntField()
@@ -63,6 +69,8 @@ class Users(mongoengine.DynamicDocument):
     photos = mongoengine.EmbeddedDocumentListField(Photo)
     videos = mongoengine.EmbeddedDocumentListField(Video)
     posts = mongoengine.EmbeddedDocumentListField(Post)
+    
+    meta = {'queryset_class': UsersQuerySet}
 
 
 class RequestsLog(mongoengine.DynamicDocument):

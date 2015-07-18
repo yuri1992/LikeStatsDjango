@@ -5,7 +5,6 @@ from mongoengine import connect
 import tasks
 connect('test', host='mongodb://localhost/test')
 
-
 class Login(ListView):
 
     def get(self, request):
