@@ -49,14 +49,20 @@ class Post(mongoengine.EmbeddedDocument):
     likes = mongoengine.DictField()
 
 
+class Friend(mongoengine.EmbeddedDocument):
+    fb_id = mongoengine.IntField()
+
 
 class UsersQuerySet(mongoengine.QuerySet):
+
+    def map_reduce_likes(self):
+        pass
+
     def get_total_likes(self):
-        
+        pass
 
 
 class Users(mongoengine.DynamicDocument):
-
     fb_id = mongoengine.IntField()
     email = mongoengine.EmailField()
     birthday = mongoengine.StringField()
@@ -69,9 +75,20 @@ class Users(mongoengine.DynamicDocument):
     photos = mongoengine.EmbeddedDocumentListField(Photo)
     videos = mongoengine.EmbeddedDocumentListField(Video)
     posts = mongoengine.EmbeddedDocumentListField(Post)
-    
+    friends = mongoengine.EmbeddedDocumentListField(Friend)
+
     meta = {'queryset_class': UsersQuerySet}
 
 
 class RequestsLog(mongoengine.DynamicDocument):
     url = mongoengine.StringField()
+
+
+class Stats(mongoengine.Document):
+    total_likes = mongoengine.IntField()
+    photos_likes = mongoengine.IntField()
+    videos_likes = mongoengine.IntField()
+    posts_likes = mongoengine.IntField()
+    sorted_photos = mongoengine.EmbeddedDocumentListField(Photo)
+    sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
+    sorted_posts = mongoengine.EmbeddedDocumentListField(Post)

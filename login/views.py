@@ -2,6 +2,8 @@ from django.views.generic import ListView
 from django.shortcuts import render_to_response
 from facebook_sdk.facebook_login import FacebookLoginHandler
 from mongoengine import connect
+from models import Users
+from bson import ObjectId, Code
 import tasks
 connect('test', host='mongodb://localhost/test')
 
@@ -17,5 +19,52 @@ class Login(ListView):
         else:
             res = {}
             tasks.fetch_all.apply_async([login_status.user_data.fb_id])
+            res_re = Users.objects.map_reduce(Code("""
+                function() {
+                    var self = this;
+                    
+                    this[~photos].forEach(function(value) {
+                        obj = {
+                            'type':'photos',
+                            'value':value,
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                    this[~posts].forEach(function(value) {
+                        obj = {
+                            'type':'posts',
+                            'value':value,
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                    this[~videos].forEach(function(value) {
+                        obj = {
+                            'type':'videos',
+                            'value':value,
+
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                }"""),
+                Code(""" 
+                function(key,values) {
+                    sum = {
+                        'total':0,
+                        'photos':0,
+                        'videos':0,
+                        'posts':0,
+                        'top_likers': [],
+                        'top_photos': [],
+                        'top_posts': [],
+                        'top_videos': [],
+                    };   
+                    values.forEach(function(obj) {
+                       sum.total += obj.value.likes.summary.total_count;
+                       sum[obj.type] += obj.value.likes.summary.total_count;
+                    });
+                    return sum;
+                }
+                """),'map_reduce')
+            print list(res_re)
             return render_to_response('user.html', res)
 
