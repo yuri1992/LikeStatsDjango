@@ -55,7 +55,7 @@ class Friend(mongoengine.EmbeddedDocument):
 
 class UsersQuerySet(mongoengine.QuerySet):
 
-    def redue_likes(self):
+    def reduce_likes(self):
         reduce_obj = self.map_reduce(Code("""
                 function() {
                     var self = this;
@@ -83,7 +83,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                         emit(self.fb_id,obj);
                     })
                 }"""),
-                Code(""" 
+                                     Code(""" 
                 function(key,values) {
                     sum = {
                         'total':0,
@@ -91,9 +91,6 @@ class UsersQuerySet(mongoengine.QuerySet):
                         'videos':0,
                         'posts':0,
                         'top_likers': [],
-                        'top_photos': [],
-                        'top_posts': [],
-                        'top_videos': [],
                     };   
                     values.forEach(function(obj) {
                        sum.total += obj.value.likes.summary.total_count;
@@ -103,6 +100,27 @@ class UsersQuerySet(mongoengine.QuerySet):
                 }
                 """), 'map_reduce')
         return list(reduce_obj)
+
+    def sort_elements(self):
+        return self.exec_js("""
+            db[collection].find(query).forEach(function(value) {
+                   var sorted = value[~photos].sort(function(a,b) {
+                       return b.likes.summary.total_count - a.likes.summary.total_count
+                   });
+                   db[collection].update(query,{$set: {photos:sorted}})
+
+                   var sorted = value[~videos].sort(function(a,b) {
+                       return b.likes.summary.total_count - a.likes.summary.total_count
+                   });
+                   db[collection].update(query,{$set: {videos:sorted}})
+
+                   var sorted = value[~posts].sort(function(a,b) {
+                       return b.likes.summary.total_count - a.likes.summary.total_count
+                   });
+                   db[collection].update(query,{$set: {posts:sorted}})
+            })
+            return {};
+        """)
 
 
 class Users(mongoengine.DynamicDocument):
@@ -123,10 +141,6 @@ class Users(mongoengine.DynamicDocument):
     meta = {'queryset_class': UsersQuerySet}
 
 
-class RequestsLog(mongoengine.DynamicDocument):
-    url = mongoengine.StringField()
-
-
 class Stats(mongoengine.Document):
     total_likes = mongoengine.IntField()
     photos_likes = mongoengine.IntField()
@@ -135,3 +149,7 @@ class Stats(mongoengine.Document):
     sorted_photos = mongoengine.EmbeddedDocumentListField(Photo)
     sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
     sorted_posts = mongoengine.EmbeddedDocumentListField(Post)
+
+
+class RequestsLog(mongoengine.DynamicDocument):
+    url = mongoengine.StringField()

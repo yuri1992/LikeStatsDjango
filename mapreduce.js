@@ -35,6 +35,7 @@ var reduceFunction = function(key,values) {
     };
     total_likers = {};
     likers = {};
+    
     values.forEach(function(obj) {
        obj.value.likes.data.forEach(function(user) {
            if (typeof total_likers[user.id] == "undefined") {
@@ -51,7 +52,9 @@ var reduceFunction = function(key,values) {
         likers[i]['total_likes'] = value;
         sum['top_likers'].push(likers[i]);
     }
-    sum['likers'] = likers;
+    sum['top_likers'] = sum['top_likers'].sort(function(a,b) { 
+            return b.total_likes - a.total_likes;
+        });
     return sum;
 }
 db.users.mapReduce(

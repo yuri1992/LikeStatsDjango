@@ -1,4 +1,4 @@
-from django.views.generic import ListView, TempleteView
+from django.views.generic import ListView
 from django.shortcuts import render_to_response
 from facebook_sdk.facebook_login import FacebookLoginHandler
 from mongoengine import connect
@@ -20,5 +20,4 @@ class Login(ListView):
         else:
             res = {}
             tasks.fetch_all.apply_async([login_status.user_data.fb_id])
-            tasks.aggregate_likes.apply_async([login_status.user_data.fb_id])
             return render_to_response('user.html', res)
