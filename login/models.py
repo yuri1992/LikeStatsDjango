@@ -55,11 +55,54 @@ class Friend(mongoengine.EmbeddedDocument):
 
 class UsersQuerySet(mongoengine.QuerySet):
 
-    def map_reduce_likes(self):
-        pass
+    def redue_likes(self):
+        reduce_obj = self.map_reduce(Code("""
+                function() {
+                    var self = this;
+                    
+                    this[~photos].forEach(function(value) {
+                        obj = {
+                            'type':'photos',
+                            'value':value,
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                    this[~posts].forEach(function(value) {
+                        obj = {
+                            'type':'posts',
+                            'value':value,
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                    this[~videos].forEach(function(value) {
+                        obj = {
+                            'type':'videos',
+                            'value':value,
 
-    def get_total_likes(self):
-        pass
+                        }
+                        emit(self.fb_id,obj);
+                    })
+                }"""),
+                Code(""" 
+                function(key,values) {
+                    sum = {
+                        'total':0,
+                        'photos':0,
+                        'videos':0,
+                        'posts':0,
+                        'top_likers': [],
+                        'top_photos': [],
+                        'top_posts': [],
+                        'top_videos': [],
+                    };   
+                    values.forEach(function(obj) {
+                       sum.total += obj.value.likes.summary.total_count;
+                       sum[obj.type] += obj.value.likes.summary.total_count;
+                    });
+                    return sum;
+                }
+                """), 'map_reduce')
+        return list(reduce_obj)
 
 
 class Users(mongoengine.DynamicDocument):

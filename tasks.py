@@ -65,3 +65,10 @@ def fetch_all(fb_id):
     fetch_photos_data(fb_id)
     fetch_posts_data(fb_id)
     fetch_videos_data(fb_id)
+
+@app.task
+def aggregate_likes(fb_id_list):
+    if isinstance(fb_id_list,int):
+        fb_id_list = [fb_id_list]
+    users = Users.objects.filter(fb_id__in=fb_id_list)
+    users.redue_likes()
