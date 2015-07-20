@@ -51,7 +51,7 @@ class Post(mongoengine.EmbeddedDocument):
 
 
 class Friend(mongoengine.EmbeddedDocument):
-    id = mongoengine.IntField(fb_id='post_id')
+    id = mongoengine.IntField(name='fb_id')
     name = mongoengine.StringField()
 
 

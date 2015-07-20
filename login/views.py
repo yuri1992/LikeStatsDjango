@@ -22,7 +22,7 @@ class Login(ListView):
         else:
             res = {
                 'fb_id': login_status.user_data.fb_id
-
+            }
             return render_to_response('user.html', res)
 
 
