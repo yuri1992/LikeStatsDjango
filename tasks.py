@@ -7,9 +7,7 @@ from mongoengine import connect
 import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'counter.settings')
-
 app = Celery('tasks', broker_url='mongodb://localhost/broker')
-
 app.config_from_object('django.conf:settings')
 app.conf.update(
     BROKER_URL='mongodb://localhost/broker',
@@ -19,7 +17,6 @@ app.conf.update(
         'database': 'celery',
         'taskmeta_collection': 'my_taskmeta_collection',
     },
-
 )
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
@@ -65,20 +62,20 @@ def fetch_all(fb_id):
     fetch_photos_data(fb_id)
     fetch_posts_data(fb_id)
     fetch_videos_data(fb_id)
-    sotring(fb_id)
-    aggregate_likes(fb_id)
+    sotring.apply_async([fb_id])
+    aggregate_likes.apply_async([fb_id])
 
 
 @app.task
-def aggregate_likes(fb_id_list):
-    if isinstance(fb_id_list, int):
-        fb_id_list = [fb_id_list]
-    users = Users.objects.filter(fb_id__in=fb_id_list)
+def aggregate_likes(fb_id):
+    if isinstance(fb_id, int):
+        fb_id_list = [fb_id]
+    users = Users.objects.filter(fb_id=fb_id)
     users.reduce_likes()
 
 @app.task
-def sotring(fb_id_list):
-    if isinstance(fb_id_list, int):
-        fb_id_list = [fb_id_list]
-    users = Users.objects.filter(fb_id__in=fb_id_list)
+def sotring(fb_id):
+    if isinstance(fb_id, int):
+        fb_id_list = [fb_id]
+    users = Users.objects.filter(fb_id=fb_id)
     users.sort_elements()

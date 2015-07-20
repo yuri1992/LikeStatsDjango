@@ -1,20 +1,37 @@
-Wellcome
+{% extends "base.html" %}
 
-<pre>
-    {{res}}
-</pre>
+{% block main_content %}
+    <div class="continer">
+    <div id="login" class='center-screen col-lg-8 col-sm-offset-4 col-sm-10 col-sm-offset-1'>
+        <h1 class='text-center'>How Much Likes You Worth ? </h1>
+        <div class="fHow Much Likes You Worth ?How Much Likes You Worth ?orm-group" id="warper">        
+                <a class="btn btn-lg btn-block btn-hmluw" id="count"
+                        href="">
+                    Count My Likes
+                </a>
+        </div>
+        <input type='hidden' id='fb_id' name='fb_id' value='{{fb_id}}'/>
+    </div>
+    </div>  
+    <div class='hidden' id='box-template'>
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="panel panel-box">
+                <div class="panel-header">
+                    
+                </div>
+                <div class="center-panel">
+                    
+                </div>
+                <div class="bottom-panel">
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}
 
-<pre>
-    {{photos}}
-</pre>
-<pre>
-    {{likes}}
-</pre>
-
-<pre>
-    {{posts}}
-</pre>
-
-<pre>
-    {{videos}}
-</pre>
+{% load staticfiles %}
+{% block js %}
+    <script src="{% static "js/scripts.js" %}"></script>
+{% endblock %}

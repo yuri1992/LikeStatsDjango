@@ -1,3 +1,4 @@
+from bson import ObjectId, Code
 import mongoengine
 
 
@@ -59,7 +60,6 @@ class UsersQuerySet(mongoengine.QuerySet):
         reduce_obj = self.map_reduce(Code("""
                 function() {
                     var self = this;
-                    
                     this[~photos].forEach(function(value) {
                         obj = {
                             'type':'photos',
@@ -98,7 +98,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                     });
                     return sum;
                 }
-                """), 'map_reduce')
+                """), 'likes_stats')
         return list(reduce_obj)
 
     def sort_elements(self):
@@ -142,6 +142,7 @@ class Users(mongoengine.DynamicDocument):
 
 
 class Stats(mongoengine.Document):
+    fb_id = mongoengine.IntField()
     total_likes = mongoengine.IntField()
     photos_likes = mongoengine.IntField()
     videos_likes = mongoengine.IntField()
