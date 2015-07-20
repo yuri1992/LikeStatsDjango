@@ -66,7 +66,6 @@ class FacebookLoginHandler(object):
             access_token_expires=data.get('expires', 0),
             **user_data
         )
-        tasks.fetch_all.apply_async([fb_id])
 
     def get_user(self, fb_id):
         user = Users.objects.filter(fb_id=fb_id).first()
@@ -75,7 +74,7 @@ class FacebookLoginHandler(object):
         return False
 
     def _register_tasks(self, data):
-        tasks.fetch_all(data['user_data']['id'])
+        tasks.fetch_all.apply_async([data['user_data']['id']])
 
     def _set_login_session(self, res):
         self._request.session['fb_id'] = res['user_data']['id']

@@ -1,4 +1,4 @@
-from celery import Celery
+from celery import Celery, chord, group
 from django.conf import settings
 from login.models import Users
 from facebook_sdk.facebook_request import GraphAPIRequest
@@ -56,6 +56,7 @@ def fetch_videos_data(fb_id):
         return data
     return None
 
+
 @app.task
 def fetch_friend_list(fb_id):
     connect('test', host='mongodb://localhost/test')
@@ -67,14 +68,19 @@ def fetch_friend_list(fb_id):
         return data
     return None
 
+
 @app.task
 def fetch_all(fb_id):
-    fetch_photos_data(fb_id)
-    fetch_posts_data(fb_id)
-    fetch_videos_data(fb_id)
-    fetch_friend_list(fb_id)
-    sotring(fb_id)
-    aggregate_likes(fb_id)
+    chord(
+        group(fetch_photos_data(fb_id),
+              fetch_posts_data(fb_id),
+              fetch_videos_data(fb_id)
+              #fetch_friend_list(fb_id)
+              ),
+        group(
+            sotring(fb_id),
+            aggregate_likes(fb_id))
+    )
 
 
 @app.task
@@ -83,6 +89,7 @@ def aggregate_likes(fb_id):
         fb_id_list = [fb_id]
     users = Users.objects.filter(fb_id=fb_id)
     users.reduce_likes()
+
 
 @app.task
 def sotring(fb_id):
