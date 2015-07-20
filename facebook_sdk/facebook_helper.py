@@ -10,7 +10,7 @@ class GraphAPIHelper(object):
         return self.request(
             settings.FACEBOOK_VERSION + "/" + id + "/" + connection_name, args)
 
-    def put_object(self, parent_object, connection_name, **data):
+    def put_object(self, parent_object, object_type, access_token, **data):
         """Writes the given object to the graph, connected to the given parent.
 
         For example,
@@ -35,12 +35,13 @@ class GraphAPIHelper(object):
 
         """
         assert self.access_token, "Write operations require an access token"
-        return self.request(
-            self.version + "/" + parent_object + "/" + connection_name,
-            post_args=data,
-            method="POST")
+        return GraphAPIRequest(access_token,
+                               settings.FACEBOOK_VERSION + "/" +
+                               parent_object + "/" + object_type,
+                               post_args=data,
+                               method="POST")
 
-    def put_wall_post(self, message, attachment={}, profile_id="me"):
+    def put_wall_post(self, message, attachment={}, profile_id="me", access_token=None):
         """Writes a wall post to the given profile's wall.
 
         We default to writing to the authenticated user's wall if no
@@ -59,29 +60,12 @@ class GraphAPIHelper(object):
         return self.put_object(profile_id, "feed", message=message,
                                **attachment)
 
-    def put_comment(self, object_id, message):
-        """Writes the given comment on the given post."""
-        return self.put_object(object_id, "comments", message=message)
-
-    def put_like(self, object_id):
-        """Likes the given post."""
-        return self.put_object(object_id, "likes")
-
-    def delete_object(self, id):
-        """Deletes the object with the given ID from the graph."""
-        self.request(self.version + "/" + id, method="DELETE")
-
-    def delete_request(self, user_id, request_id):
-        """Deletes the Request with the given ID for the given user."""
-        self.request("%s_%s" % (request_id, user_id), method="DELETE")
-
     def put_photo(self, image, album_path="me/photos", **kwargs):
         """
-        Upload an image using multipart/form-data.
+            Upload an image using multipart/form-data.
 
-        image - A file object representing the image to be uploaded.
-        album_path - A path representing where the image should be uploaded.
-
+            image - A file object representing the image to be uploaded.
+            album_path - A path representing where the image should be uploaded.
         """
         return self.request(
             self.version + "/" + album_path,
@@ -157,4 +141,11 @@ class GraphAPIHelper(object):
             'limit': '500'
         }
         res = GraphAPIRequest(access_token, '/me/posts', args).get_all()
+        return res
+
+    def get_user_friends(fb_id, access_token):
+        args = {
+            'limit': '500'
+        }
+        res = GraphAPIRequest(access_token, '/me/friends', args).get_all()
         return res

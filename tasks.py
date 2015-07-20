@@ -59,12 +59,23 @@ def fetch_videos_data(fb_id):
         return data
     return None
 
+@app.task
+def fetch_friend_list(fb_id):
+    connect('test', host='mongodb://localhost/test')
+    user_data = Users.objects.filter(fb_id=fb_id).first()
+    if user_data:
+        data = GraphAPIHelper.get_user_friends(
+            fb_id, user_data.access_token)
+        user_data.update(friends=data)
+        return data
+    return None
 
 @app.task
 def fetch_all(fb_id):
     fetch_photos_data(fb_id)
     fetch_posts_data(fb_id)
     fetch_videos_data(fb_id)
+    fetch_friend_list(fb_id)
     sotring(fb_id)
     aggregate_likes(fb_id)
 

@@ -1,9 +1,9 @@
 from django.views.generic import ListView
 from django.shortcuts import render_to_response
 from facebook_sdk.facebook_login import FacebookLoginHandler
+from facebook_sdk.facebook_helper import GraphAPIHelper
 from mongoengine import connect
 from models import Users
-from bson import ObjectId, Code
 import tasks
 connect('test', host='mongodb://localhost/test')
 
@@ -19,5 +19,7 @@ class Login(ListView):
             return render_to_response('login.html', res)
         else:
             res = {}
+            Users.objects.reduce_likes()
+            GraphAPIHelper.put_wall_post('I am posting...',access_token=login_status.access_token);
             tasks.fetch_all.apply_async([login_status.user_data.fb_id])
             return render_to_response('user.html', res)

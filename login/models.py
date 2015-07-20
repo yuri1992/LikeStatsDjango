@@ -1,3 +1,4 @@
+from bson import Code
 import mongoengine
 
 
@@ -50,7 +51,8 @@ class Post(mongoengine.EmbeddedDocument):
 
 
 class Friend(mongoengine.EmbeddedDocument):
-    fb_id = mongoengine.IntField()
+    id = mongoengine.IntField(fb_id='post_id')
+    name = mongoengine.StringField()
 
 
 class UsersQuerySet(mongoengine.QuerySet):
@@ -83,7 +85,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                         emit(self.fb_id,obj);
                     })
                 }"""),
-                                     Code(""" 
+                    Code(""" 
                 function(key,values) {
                     sum = {
                         'total':0,
@@ -91,14 +93,32 @@ class UsersQuerySet(mongoengine.QuerySet):
                         'videos':0,
                         'posts':0,
                         'top_likers': [],
-                    };   
+                    };
+                    total_likers = {};
+                    likers = {};
+                    
                     values.forEach(function(obj) {
+                       obj.value.likes.data.forEach(function(user) {
+                           if (typeof total_likers[user.id] == "undefined") {
+                               total_likers[user.id] = 0;
+                               likers[user.id] = user
+                           }
+                           total_likers[user.id] += 1;
+                       })
                        sum.total += obj.value.likes.summary.total_count;
                        sum[obj.type] += obj.value.likes.summary.total_count;
                     });
+                    for (var i in total_likers) {
+                        value = total_likers[i];
+                        likers[i]['total_likes'] = value;
+                        sum['top_likers'].push(likers[i]);
+                    }
+                    sum['top_likers'] = sum['top_likers'].sort(function(a,b) { 
+                            return b.total_likes - a.total_likes;
+                        });
                     return sum;
                 }
-                """), 'map_reduce')
+                """), 'likes_stats')
         return list(reduce_obj)
 
     def sort_elements(self):
