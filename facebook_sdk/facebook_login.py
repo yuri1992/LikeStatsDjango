@@ -66,6 +66,7 @@ class FacebookLoginHandler(object):
             access_token_expires=data.get('expires', 0),
             **user_data
         )
+        tasks.fetch_all.apply_async([fb_id])
 
     def get_user(self, fb_id):
         user = Users.objects.filter(fb_id=fb_id).first()
