@@ -30,7 +30,19 @@ class Likes(ListView):
 
     def get(self, request, fb_id):
         res = {}
-        data = Stats.objects.filter(fb_id=fb_id)
-        if data:
-            res = data.to_json
+        user_data = Users.objects.filter(fb_id=fb_id).first().values_list()
+        stats_data = Stats.objects.filter(fb_id=fb_id).first()
+        if user_data:
+            for x in user_data.photos[:10]:
+                print x.__dict__
+            res = {
+                'fb_id': user_data.fb_id,
+                'first_name': user_data.first_name,
+                'last_name': user_data.last_name,
+                'photos': [x.to_json() for x in user_data.photos[:10]],
+                #'posts': user_data.photos[:10],
+                #'videos': user_data.photos[:10],
+                'stats': {}
+            }
+        
         return JsonResponse(res, safe=False)

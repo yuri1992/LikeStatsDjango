@@ -87,6 +87,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                     Code(""" 
                 function(key,values) {
                     sum = {
+                        'fb_id':key,
                         'total':0,
                         'photos':0,
                         'videos':0,
