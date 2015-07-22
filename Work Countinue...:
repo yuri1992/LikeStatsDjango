@@ -10,14 +10,15 @@ Learning Skills:
 Kanban:
 
 1.Make Stats For the following reports:
-	1. Top Friends How Like you
-	2. Top Photos,Videos and Posts
-	3. Your Friends Stats:
+	1. Top Friends How Like you -> DONE
+	2. Top Photos,Videos and Posts -> DONE
+
+	3. Your Friends Stats: - NOT READY
 		3.1 order List of the Top Liked Friends
 		3.2 order List by Content Type Photo,Video,Post
 
 3. Facebook Counter:
-	1.Upload Posts About The Data With Link To App
+	1.Upload Posts About The Data With Link To App - API IS DONE AND READY,
 		1.1 Making Publish With Pepole Tags
 		1.2 Publish By User languge
 		1.3 Publish For Each Pice Of stat
