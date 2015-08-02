@@ -1,10 +1,12 @@
 from django.views.generic import ListView
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, requires_csrf_token
+from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 from facebook_sdk.facebook_login import FacebookLoginHandler
 from facebook_sdk.facebook_helper import GraphAPIHelper
 from mongoengine import connect
-from models import Users, Stats
+from models import Users, Stats, Likes_Stats
 from bson import ObjectId, Code
 from django.core.serializers.json import DjangoJSONEncoder
 import tasks
@@ -20,25 +22,25 @@ class JsonMongodbEncoder(DjangoJSONEncoder):
         return super(JsonMongodbEncoder, self).defualt(o)
 
 
-class Login(ListView):
+@requires_csrf_token
+def login(request):
+    res = {}
+    login_status = FacebookLoginHandler(request)
 
-    def get(self, request):
-        res = {}
-        login_status = FacebookLoginHandler(request)
+    if not login_status.is_login():
+        res['redirect_url'] = login_status.get_login_url()
+        return render_to_response('login.html', res)
+    else:
+        res = csrf(request)
+        res.update({
+            'fb_id': login_status.user_data.fb_id,
+        })
 
-        if not login_status.is_login():
-            res['redirect_url'] = login_status.get_login_url()
-            return render_to_response('login.html', res)
-        else:
-            res = {
-                'fb_id': login_status.user_data.fb_id
-            }
-            return render_to_response('user.html', res)
+        return render_to_response('user.html', res)
 
 
-class Likes(ListView):
-
-    def get(self, request, fb_id):
+def stats(request, fb_id):
+    if request.META['REQUEST_METHOD'] == 'POST':
         res = {}
         res = Users.objects.\
             filter(fb_id=fb_id).\
@@ -49,20 +51,9 @@ class Likes(ListView):
             first().\
             to_mongo()
 
-        # print user_data
-        # print dir(user_data)
-        # stats_data = Stats.objects.filter(fb_id=fb_id).first()
-        # if user_data:
-        #     for x in user_data[0].photos[:10]:
-        #         print x.__dict__
-        #     res = {
-        #         'fb_id': user_data.fb_id,
-        #         'first_name': user_data.first_name,
-        #         'last_name': user_data.last_name,
-        #         'photos': [x.to_json() for x in user_data.photos[:10]],
-        # 'posts': user_data.photos[:10],
-        # 'videos': user_data.photos[:10],
-        #         'stats': {}
-        #     }
+        res['stats'] = Likes_Stats.objects.filter(
+            value__fb_id=fb_id
+        ).exclude('id').fields(slice__value__top_likers=10).first().to_mongo()
 
         return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
+    return JsonResponse({})

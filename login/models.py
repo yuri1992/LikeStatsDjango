@@ -84,7 +84,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                         emit(self.fb_id,obj);
                     })
                 }"""),
-                    Code(""" 
+                                     Code(""" 
                 function(key,values) {
                     sum = {
                         'fb_id':key,
@@ -161,15 +161,22 @@ class Users(mongoengine.DynamicDocument):
     meta = {'queryset_class': UsersQuerySet}
 
 
-class Stats(mongoengine.Document):
+class Stats(mongoengine.EmbeddedDocument):
     fb_id = mongoengine.IntField()
-    total_likes = mongoengine.IntField()
-    photos_likes = mongoengine.IntField()
-    videos_likes = mongoengine.IntField()
-    posts_likes = mongoengine.IntField()
-    sorted_photos = mongoengine.EmbeddedDocumentListField(Photo)
-    sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
-    sorted_posts = mongoengine.EmbeddedDocumentListField(Post)
+    total = mongoengine.IntField()
+    photos = mongoengine.IntField()
+    videos = mongoengine.IntField()
+    posts = mongoengine.IntField()
+    top_likers = mongoengine.ListField()
+    # sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
+    # sorted_posts = mongoengine.EmbeddedDocumentListField(Post)
+
+
+class Likes_Stats(mongoengine.Document):
+    value = mongoengine.EmbeddedDocumentField(Stats)
+    meta = {
+        'collection': 'likes_stats'
+    }
 
 
 class RequestsLog(mongoengine.DynamicDocument):

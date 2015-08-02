@@ -10,6 +10,7 @@
     listener.prototype = {
         _init:function() {
             this._ajaxFinished = true;
+            this.token = $('input[name=csrfmiddlewaretoken]').val();
             this.affects_before();
             this.listener();
         },
@@ -25,10 +26,11 @@
             if (this._ajaxFinished) {
                 time = new Date().getTime() / 1000;
                 jQuery.ajax({
-                        url:'listener.php',
+                        method:'post',
+                        url:'/stats/'+self._userId,
                         data: {
-                                'fb_id':self._userId,
-                                'time':time
+                                'time':time,
+                                'csrfmiddlewaretoken':this.token
                             },
                         dataType:'JSON',
                         success:function(data) {
@@ -49,8 +51,7 @@
             }
         },
         onListenerSuccess :function(data) {
-            console.log(data);
-            if (data.status == "finish") {
+            if (data) {
                 clearInterval(this._intervalId);
                 this.user_data = data;
                 this.affects_after();
@@ -156,7 +157,7 @@
                         self.warper.append(a)
                     }
                 }
-                FB.XFBML.parse(); 
+                //FB.XFBML.parse(); 
             });
 
 

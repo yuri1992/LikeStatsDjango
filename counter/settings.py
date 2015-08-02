@@ -34,7 +34,7 @@ TEMPLATE_DIRS = (
 )
 
 
-URL_SITE = "http://local.ynet.co.il:8080/login/"
+URL_SITE = "http://local.ynet.co.il:8080/"
 
 
 SCOPE_PREMISSON = [
@@ -100,7 +100,9 @@ USE_L10N = True
 
 USE_TZ = True
 APP_DIRS = True
+
 FACEBOOK_SECRET = "c9498587ac9d2a7cee813abbaa8ed7c0"
+
 FACEBOOK_APP_ID = "1649266495305734"
 
 # Static files (CSS, JavaScript, Images)

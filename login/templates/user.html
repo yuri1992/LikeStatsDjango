@@ -11,6 +11,8 @@
                 </a>
         </div>
         <input type='hidden' id='fb_id' name='fb_id' value='{{fb_id}}'/>
+        {% csrf_token %}
+
     </div>
     </div>  
     <div class='hidden' id='box-template'>

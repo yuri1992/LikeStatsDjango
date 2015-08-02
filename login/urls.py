@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 
-from .views import Login, Likes
+from .views import stats, login
 urlpatterns = patterns(
     '',
-    url(r'^$', Login.as_view()),
-    url(r'^stats/(?P<fb_id>\d+)$', Likes.as_view()),
+    url(r'^$', login),
+    url(r'^stats/(?P<fb_id>\d+)$', stats),
 )
