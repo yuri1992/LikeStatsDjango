@@ -99,15 +99,17 @@ class UsersQuerySet(mongoengine.QuerySet):
                     likers = {};
                     
                     values.forEach(function(obj) {
-                       obj.value.likes.data.forEach(function(user) {
-                           if (typeof total_likers[user.id] == "undefined") {
-                               total_likers[user.id] = 0;
-                               likers[user.id] = user
-                           }
-                           total_likers[user.id] += 1;
-                       })
-                       sum.total += obj.value.likes.summary.total_count;
-                       sum[obj.type] += obj.value.likes.summary.total_count;
+                        if (typeof(obj.value.likes.data) != 'undefined') {
+                           obj.value.likes.data.forEach(function(user) {
+                               if (typeof total_likers[user.id] == "undefined") {
+                                   total_likers[user.id] = 0;
+                                   likers[user.id] = user
+                               }
+                               total_likers[user.id] += 1;
+                           })
+                           sum.total += obj.value.likes.summary.total_count;
+                           sum[obj.type] += obj.value.likes.summary.total_count;
+                       }
                     });
                     for (var i in total_likers) {
                         value = total_likers[i];
@@ -125,20 +127,27 @@ class UsersQuerySet(mongoengine.QuerySet):
     def sort_elements(self):
         return self.exec_js("""
             db[collection].find(query).forEach(function(value) {
-                   var sorted = value[~photos].sort(function(a,b) {
-                       return b.likes.summary.total_count - a.likes.summary.total_count
-                   });
-                   db[collection].update(query,{$set: {photos:sorted}})
-
-                   var sorted = value[~videos].sort(function(a,b) {
-                       return b.likes.summary.total_count - a.likes.summary.total_count
-                   });
-                   db[collection].update(query,{$set: {videos:sorted}})
-
-                   var sorted = value[~posts].sort(function(a,b) {
-                       return b.likes.summary.total_count - a.likes.summary.total_count
-                   });
-                   db[collection].update(query,{$set: {posts:sorted}})
+                    if (value[~photos].length > 0) {
+                       var sorted = value[~photos].sort(function(a,b) {
+                        if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
+                           return b.likes.summary.total_count - a.likes.summary.total_count
+                       });
+                       db[collection].update(query,{$set: {photos:sorted}})
+                    }
+                    if (value[~videos].length > 0) {
+                       var sorted = value[~videos].sort(function(a,b) {
+                        if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
+                           return b.likes.summary.total_count - a.likes.summary.total_count
+                       });
+                       db[collection].update(query,{$set: {videos:sorted}})
+                    }
+                    if (value[~posts].length > 0) {
+                       var sorted = value[~posts].sort(function(a,b) {
+                           if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
+                                return b.likes.summary.total_count - a.likes.summary.total_count
+                       });
+                       db[collection].update(query,{$set: {posts:sorted}})
+                    }
             })
             return {};
         """)
