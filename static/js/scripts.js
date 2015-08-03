@@ -81,83 +81,70 @@
                 jQuery(this).fadeIn(1000);
             });
         },
+        _buildTemplateHtml :function(id,data) {
+            template = Handlebars.compile(jQuery(id).html());
+            return template(data)
+        },
+        
         buildHtml:function() {
             var self = this;
             this.link.fadeOut(1000,function() {
                 fields = {
-                    'LIKE_COUNT':{
+                    'total':{
                         'icon':'fa fa-thumbs-o-up',
-                        'title':'Total Likes'
+                        'title':'Total Likes',
+                        'templateId':'#entry-likes-number',
                     },
-                    'PHOTOS_COUNT':{
+                    'photos':{
                         'icon':'fa fa fa-camera',
-                        'title':'Total Likes On Photos'
+                        'title':'Total Likes On Photos',
+                        'templateId':'#entry-likes-number'
                     },
-                    'POSTS_COUNT':{
+                    'posts':{
                         'icon':'fa fa-font',
-                        'title':'Total Likes On Posts'
+                        'title':'Total Likes On Posts',
+                        'templateId':'#entry-likes-number'
                     },
-                    'VIDEOS_COUNT':{
+                    'videos':{
                         'icon':'fa fa-video-camera',
-                        'title':'Total Likes On Videos'
+                        'title':'Total Likes On Videos',
+                        'templateId':'#entry-likes-number'
+                    },
+                    'top_likers': {
+                        'icon':'fa fa-video-camera',
+                        'title':'Total Likes On Videos',
+                        'templateId':'#entry-likes-list',
                     }
                 };
                 
-                for (var x in fields) {
-                    if (self.user_data[x] !== undefined){
-                        data = fields[x];
-                        a = self._template.clone();
-                        a.removeClass('hidden');
-                        a.find('.panel-header').html(
-                            data.title)
-                        a.find('.center-panel').append(
-                            jQuery('<h2><i class="'+data.icon+'">'+self.user_data[x]+'</i></h2>')
-                        )
-                        a.find('.bottom-panel').append(
-                            jQuery('')
-                        )
-                        a.attr('class','');
-                        self.warper.append(a)
+                for (var field in fields) {
+                    if (self.user_data.stats[field] !== undefined){
+                        data = fields[field];
+                        data['value'] = self.user_data.stats[field];
+                        el = self._buildTemplateHtml(data['templateId'],data)
+                        self.warper.append(el)
                     }
                 }
 
-                fields_tops = {
-                    'top_likers':{
-                        'title':'Top Likers'
+
+                fields = {
+                    'photos':{
+                        'icon':'fa fa-thumbs-o-up',
+                        'title':'Total Likes',
+                        'templateId':'#entry-likes-list-photos',
                     },
-                    'top_posts':{
-                        'title':'Top Post'
-                    },
-                    'top_videos':{
-                        'title':'Top Video'
-                    },
-                    'top_photos':{
-                        'title':'Top Photo'
-                    }
-                    
                 }
+                for (var field in fields) {
+                    if (self.user_data[field] !== undefined){
+                        data = fields[field];
+                        data['value'] = self.user_data[field];
+                        el = self._buildTemplateHtml(data['templateId'],data)
+                        self.warper.append(el)
+                    }
+                }
+
                 
-                for (var x in fields_tops) {
-
-                    if (self.user_data[x] !== undefined){
-                        extra_info = fields_tops[x]
-                        data = self.user_data[x];
-                        a = self._template.clone();
-                        a.removeClass('hidden');
-                        a.find('.panel-header').html(
-                            extra_info.title
-                            )
-                        a.find('.center-panel').append(
-                            jQuery(data.html)
-                        )
-                        a.find('.bottom-panel').append(
-                            jQuery('')
-                        )
-                        a.attr('class','');
-                        self.warper.append(a)
-                    }
-                }
-                //FB.XFBML.parse(); 
+                
             });
 
 
@@ -194,4 +181,13 @@
         })
         return this;
     }
+    Handlebars.registerHelper('each', function(context, options) {
+        var ret = "";
+
+        for(var i=0, j=context.length; i<j; i++) {
+            ret = ret + options.fn(context[i]);
+        }
+
+        return ret;
+    });
 })(jQuery);

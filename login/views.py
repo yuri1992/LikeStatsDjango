@@ -40,7 +40,7 @@ def login(request):
 
 
 def stats(request, fb_id):
-    if request.META['REQUEST_METHOD'] == 'POST':
+    if request.META['REQUEST_METHOD'] == 'POST' or 1 == 1:
         res = {}
         res = Users.objects.\
             filter(fb_id=fb_id).\
@@ -48,12 +48,15 @@ def stats(request, fb_id):
             fields(slice__photos=10).\
             fields(slice__posts=10).\
             fields(slice__videos=10).\
+            only('name', 'link', 'photos', 'videos', 'posts').\
             first().\
             to_mongo()
 
-        res['stats'] = Likes_Stats.objects.filter(
-            value__fb_id=fb_id
-        ).exclude('id').fields(slice__value__top_likers=10).first().to_mongo()
+        res['stats'] = Likes_Stats.objects.filter(value__fb_id=fb_id).\
+            exclude('id').\
+            fields(slice__value__top_likers=10).\
+            first().\
+            to_mongo()['value']
 
         return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
     return JsonResponse({})

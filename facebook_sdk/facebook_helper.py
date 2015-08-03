@@ -113,7 +113,7 @@ class GraphAPIHelper(object):
             return all user photos by access_token
         """
         args = {
-            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name',
+            'fields': 'likes.summary(true){pic_small,name,id,can_post},picture,name,images.height(480){source,height,width}',
             'limit': '500'
         }
         res = GraphAPIRequest(access_token, '/me/photos', args).get_all()

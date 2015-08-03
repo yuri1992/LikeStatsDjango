@@ -30,6 +30,7 @@ class Photo(mongoengine.EmbeddedDocument):
     created_time = mongoengine.StringField()
     #likes = mongoengine.EmbeddedDocumentListField(Likes)
     likes = mongoengine.DictField()
+    images = mongoengine.ListField()
 
 
 class Video(mongoengine.EmbeddedDocument):

@@ -12,28 +12,103 @@
         </div>
         <input type='hidden' id='fb_id' name='fb_id' value='{{fb_id}}'/>
         {% csrf_token %}
+    </div>
+    <div id="result">
+    </div>
+    <div id="fb-root"></div>
 
-    </div>
+
+
+   
+
     </div>  
-    <div class='hidden' id='box-template'>
-        <div class="col-lg-8 col-lg-offset-2">
-            <div class="panel panel-box">
-                <div class="panel-header">
-                    
-                </div>
-                <div class="center-panel">
-                    
-                </div>
-                <div class="bottom-panel">
-                    
-                </div>
-            </div>
-            
-        </div>
-    </div>
 {% endblock %}
 
 {% load staticfiles %}
 {% block js %}
     <script src="{% static "js/scripts.js" %}"></script>
+
+    <script id="entry-likes-number" type="text/x-handlebars-template">
+        <div class="col-lg-6 col-sm-12">
+            <div class="panel panel-box">
+                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="center-panel">
+
+                <h2><i class="fa {% templatetag openvariable %}icon{% templatetag closevariable %}">{% templatetag openvariable %}value{% templatetag closevariable %}</i></h2></div>
+                <div class="bottom-panel">
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="entry-likes-list" type="text/x-handlebars-template">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-box">
+                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="center-panel">
+                    {% templatetag openvariable %}#each value{% templatetag closevariable %}
+                        <li class="comment">
+                            <img src="{% templatetag openvariable %}pic_small{% templatetag closevariable %}">
+                            {% templatetag openvariable %}name{% templatetag closevariable %}
+                            <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}total_likes{% templatetag closevariable %}</i>
+                            
+                        </li>
+                    {% templatetag openvariable %}/each{% templatetag closevariable %}
+                </div>
+                <div class="bottom-panel">
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="entry-likes-list-photos" type="text/x-handlebars-template">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-box photos">
+                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="center-panel">
+                    {% templatetag openvariable %}#each value{% templatetag closevariable %}
+                        <li class="comment">
+                            <div class='text'>
+                            {% templatetag openvariable %}name{% templatetag closevariable %}
+                            </div>
+                            <div class='image'>
+                                <img src="{% templatetag openvariable %}picture{% templatetag closevariable %}">
+                            </div>
+                           
+                            <div class='small-likes'>
+                            <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}likes.summary.total_count{% templatetag closevariable %}</i>
+                            </div>
+                        </li>
+                    {% templatetag openvariable %}/each{% templatetag closevariable %}
+                </div>
+                <div class="bottom-panel">
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <script id="entry-likes-list-posts" type="text/x-handlebars-template">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-box photos">
+                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="center-panel">
+
+                    {% templatetag openvariable %}#each value{% templatetag closevariable %}
+                        <li class="comment">
+                        
+<div class="fb-post" data-href="https://www.facebook.com/1042183372/posts/10205924650929036" data-width="500">
+     <div class="fb-xfbml-parse-ignore">
+         <blockquote cite="https://www.facebook.com/beroshahla/posts/10205924650929036">Posted by <a href="#" role="button">Yuri Ritvin</a> on&nbsp;<a href="https://www.facebook.com/beroshahla/posts/10205924650929036">Tuesday, July 21, 2015</a>
+         </blockquote>
+    </div>
+</div>
+                        </li>
+                    {% templatetag openvariable %}/each{% templatetag closevariable %}
+                </div>
+                <div class="bottom-panel">
+                </div>
+            </div>
+        </div>
+    </script>
 {% endblock %}
