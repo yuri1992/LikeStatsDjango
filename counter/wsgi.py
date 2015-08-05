@@ -13,5 +13,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "counter.settings")
 
+activate_this = '/home/devel/.virtualenvs/test/bin/activate_this.py'
+execfile(activate_this, dict(__file__=activate_this))
+
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

@@ -121,7 +121,7 @@ class UsersQuerySet(mongoengine.QuerySet):
                         });
                     return sum;
                 }
-                """), 'likes_stats')
+                """), {'merge': 'likes_stats'})
         return list(reduce_obj)
 
     def sort_elements(self):
@@ -151,6 +151,8 @@ class UsersQuerySet(mongoengine.QuerySet):
             })
             return {};
         """)
+
+    
 
 
 class Users(mongoengine.DynamicDocument):

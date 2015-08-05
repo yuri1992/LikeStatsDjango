@@ -35,8 +35,11 @@ def login(request):
         res.update({
             'fb_id': login_status.user_data.fb_id,
         })
-
         return render_to_response('user.html', res)
+
+
+def recount(request, fb_id):
+    return JsonResponse({})
 
 
 def stats(request, fb_id):
