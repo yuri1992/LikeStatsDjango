@@ -7,6 +7,7 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
+from mongoengine import register_connection
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -60,20 +61,19 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'counter.urls'
+ROOT_URLCONF = 'urls'
 
-WSGI_APPLICATION = 'counter.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
@@ -81,8 +81,11 @@ WSGI_APPLICATION = 'counter.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'facebook_likes',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
     }
 }
 
@@ -109,9 +112,20 @@ FACEBOOK_APP_ID = "1649266495305734"
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-BROKER_URL = 'django://'
 
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+
+def register_mongo_connection(db):
+    register_connection(
+        'default',
+        name=db['MONGO_NAME'],
+        host=db['MONGO_HOST'],
+        port=db['MONGO_PORT'],
+        **{
+            'maxPoolSize': db['MONGO_MAX_POOL_SIZE'],
+        }
+    )

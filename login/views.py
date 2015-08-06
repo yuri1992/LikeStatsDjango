@@ -11,7 +11,9 @@ from bson import ObjectId, Code
 from django.core.serializers.json import DjangoJSONEncoder
 import tasks
 import json
-connect('test', host='mongodb://localhost/test')
+
+
+connect(alias='default')
 
 
 class JsonMongodbEncoder(DjangoJSONEncoder):
@@ -35,11 +37,12 @@ def login(request):
         res.update({
             'fb_id': login_status.user_data.fb_id,
         })
+        recount(login_status.user_data.fb_id)
         return render_to_response('user.html', res)
 
 
-def recount(request, fb_id):
-    return JsonResponse({})
+def recount(fb_id):
+    tasks.fetch_all.apply_async([fb_id])
 
 
 def stats(request, fb_id):
@@ -52,14 +55,19 @@ def stats(request, fb_id):
             fields(slice__posts=10).\
             fields(slice__videos=10).\
             only('name', 'link', 'photos', 'videos', 'posts').\
-            first().\
-            to_mongo()
+            first()
 
-        res['stats'] = Likes_Stats.objects.filter(value__fb_id=fb_id).\
+        if res:
+            res = res.to_mongo()
+        else:
+            return JsonResponse({})
+
+        likes_stats = Likes_Stats.objects.filter(value__fb_id=fb_id).\
             exclude('id').\
             fields(slice__value__top_likers=10).\
-            first().\
-            to_mongo()['value']
+            first()
+        if likes_stats:
+            res['stats'] = likes_stats.to_mongo()['value']
 
         return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
     return JsonResponse({})

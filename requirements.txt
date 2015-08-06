@@ -1,3 +1,8 @@
-requests
-django
-django-celery
+amqp==1.4.6
+celery==3.1.18
+dj-database-url==0.3.0
+Django==1.7.8
+kombu==3.0.26
+libsass==0.8.2
+mongoengine==0.10.0
+pymongo==2.7
