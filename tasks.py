@@ -15,7 +15,6 @@ app.conf.update(settings.CELERY_CONFIG_MODULE)
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
-
 @app.task
 def fetch_photos_data(fb_id):
     connect(alias='default')
@@ -67,7 +66,7 @@ def fetch_friend_list(fb_id):
 @app.task
 def fetch_all(fb_id):
     user = Users.objects.filter(fb_id=fb_id).first()
-    if user and not user.fetching_status:
+    if user:
         user.update(
             last_time_fetch=datetime.now(),
             fetching_status=True)
@@ -79,15 +78,13 @@ def fetch_all(fb_id):
                   # fetch_friend_list(fb_id)
                   ),
             group(
-                sotring(fb_id),
-                aggregate_likes(fb_id))
+                aggregate_likes(fb_id),
+                sotring(fb_id))
         )
 
         user.fetching_status = False
         user.last_finish_fetch = datetime.now()
         user.save()
-        
-    
 
 
 @app.task

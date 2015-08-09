@@ -44,24 +44,31 @@ def login(request):
 
 
 def recount(fb_id):
-    tasks.fetch_all.apply_async([fb_id])
+    pass
+    # tasks.fetch_all.apply_async([fb_id])
 
 
-
-def user(request,fb_id):
+def sort_elements_user(request, fb_id):
     res = Users.objects.\
-            filter(fb_id=fb_id).\
-            exclude('access_token').\
-            fields(slice__photos=1).\
-            fields(slice__posts=1).\
-            fields(slice__videos=1).\
-            first()
+        filter(fb_id=fb_id).\
+        sort_elements()
+    print res
+    return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
+
+
+def user(request, fb_id):
+    res = Users.objects.\
+        filter(fb_id=fb_id).\
+        exclude('access_token').\
+        fields(slice__photos=1).\
+        fields(slice__posts=1).\
+        fields(slice__videos=1).\
+        first()
     if res:
         res = res.to_mongo()
     else:
         return JsonResponse({})
     return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
-
 
 
 def stats(request, fb_id):
@@ -73,7 +80,7 @@ def stats(request, fb_id):
             fields(slice__photos=10).\
             fields(slice__posts=10).\
             fields(slice__videos=10).\
-            only('name', 'link','fetching_status','photos', 'videos', 'posts','profile_photo','cover').\
+            only('name', 'link', 'fetching_status', 'photos', 'videos', 'posts', 'profile_photo', 'cover').\
             first()
 
         if res:
@@ -84,6 +91,9 @@ def stats(request, fb_id):
         likes_stats = Likes_Stats.objects.filter(value__fb_id=fb_id).\
             exclude('id').\
             fields(slice__value__top_likers=10).\
+            fields(slice__value__sorted_videos=10).\
+            fields(slice__value__sorted_posts=10).\
+            fields(slice__value__sorted_photos=10).\
             first()
         if likes_stats:
             res['stats'] = likes_stats.to_mongo()['value']

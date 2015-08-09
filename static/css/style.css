@@ -202,7 +202,7 @@ body {
     height: 100px;
 }
 
-.panel-box.photos .center-panel li{
+.panel-box.photos .center-panel .comment{
     list-style: none;
     display: inline-table;
     max-width:470px;
@@ -215,7 +215,42 @@ body {
     padding:5px;
 }
 
-.panel-box.photos .center-panel li img{
+.panel-box.photos .center-panel .comment .header  img{
+   width:40px;
+   float: left;
+}
+.panel-box.photos .center-panel .comment .header {
+   text-align:left;
+}
+
+.panel-box.photos .center-panel .comment .text {
+   clear: both;
+       text-align: left;
+}
+
+.panel-box.photos .center-panel .comment .header span{
+   
+} 
+.panel-box.photos .center-panel .comment .header .profile-name{
+    color:#3b5998;
+    font-weight: bold;
+    font-size: 14px;
+        display: block;
+            line-height: 14px;
+}
+.panel-box.photos .center-panel .comment .header .info{
+    color:#9197a3;
+    font-size: 12px;
+    float: left;
+    padding-left: 10px;
+    padding-top:2px;
+}
+.panel-box.photos .center-panel .comment .header .small-likes{
+        float: right;
+    font-size: 30px;
+    line-height: 40px;
+}
+.panel-box.photos .center-panel .comment img{
     width:100%;
     height:100%;
 }

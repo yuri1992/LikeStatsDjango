@@ -133,27 +133,29 @@ class UsersQuerySet(mongoengine.QuerySet):
                            return b.likes.summary.total_count - a.likes.summary.total_count
                        });
                        //db[collection].update(query,{$set: {photos:sorted}})
-                       db['likes_stats'].update({'value':value[~fb_id]},{$set: {sorted_photos:sorted}})
+                       db['likes_stats'].update({'value.fb_id':value[~fb_id]},{$set: {'value.sorted_photos':sorted}},{upsert:true})
                     }
                     if (value[~videos].length > 0) {
                        var sorted = value[~videos].sort(function(a,b) {
                         if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
                            return b.likes.summary.total_count - a.likes.summary.total_count
                        });
-                       db[collection].update(query,{$set: {videos:sorted}})
+                       //db[collection].update(query,{$set: {videos:sorted}})
+                        db['likes_stats'].update({'value.fb_id':value[~fb_id]},{$set: {'value.sorted_videos':sorted}},{upsert:true})
+
                     }
                     if (value[~posts].length > 0) {
                        var sorted = value[~posts].sort(function(a,b) {
                            if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
                                 return b.likes.summary.total_count - a.likes.summary.total_count
                        });
-                       db[collection].update(query,{$set: {posts:sorted}})
+                       //db[collection].update(query,{$set: {posts:sorted}})
+                       db['likes_stats'].update({'value.fb_id':value[~fb_id]},{$set: {'value.sorted_posts':sorted}},{upsert:true})
+
                     }
             })
             return {};
         """)
-
-    
 
 
 class Users(mongoengine.DynamicDocument):

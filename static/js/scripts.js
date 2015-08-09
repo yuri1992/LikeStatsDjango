@@ -51,7 +51,7 @@
             }
         },
         onListenerSuccess :function(data) {
-            if (typeof data.fetching_status != 'undefined' && data.fetching_status == false) {
+            if (typeof data.stats != 'undefined') {
                 clearInterval(this._intervalId);
                 this.user_data = data;
                 this.affects_after();
@@ -114,35 +114,27 @@
                         'icon':'fa fa-video-camera',
                         'title':'Total Likes On Videos',
                         'templateId':'#entry-likes-list',
-                    }
+                    },
+                    'sorted_photos':{
+                        'icon':'fa fa-thumbs-o-up',
+                        'title':'Total Likes',
+                        'templateId':'#entry-likes-list-photos',
+                    },
                 };
                 
                 for (var field in fields) {
                     if (self.user_data.stats[field] !== undefined){
                         data = fields[field];
+                        data['user_data'] = self.user_data;
                         data['value'] = self.user_data.stats[field];
-                        el = self._buildTemplateHtml(data['templateId'],data)
+                        console.log(data)
+                        el = self._buildTemplateHtml(data['templateId'], data)
                         self.warper.append(el)
                     }
                 }
 
 
-                fields = {
-                    'photos':{
-                        'icon':'fa fa-thumbs-o-up',
-                        'title':'Total Likes',
-                        'templateId':'#entry-likes-list-photos',
-                    },
-                }
-                for (var field in fields) {
-                    if (self.user_data[field] !== undefined){
-                        data = fields[field];
-                        data['value'] = self.user_data[field];
-                        el = self._buildTemplateHtml(data['templateId'],data)
-                        self.warper.append(el)
-                    }
-                }
-
+                
                 
                 
             });
@@ -181,10 +173,13 @@
         })
         return this;
     }
-    Handlebars.registerHelper('each', function(context, options) {
+    Handlebars.registerHelper('each', function(context, profile) {
+        options = arguments[arguments.length - 1];
         var ret = "";
 
         for(var i=0, j=context.length; i<j; i++) {
+            context[i].profile = profile ;
+            //context[i].created_time = new Date(context[i].created_time)
             ret = ret + options.fn(context[i]);
         }
 
