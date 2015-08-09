@@ -169,6 +169,9 @@ class Users(mongoengine.DynamicDocument):
     videos = mongoengine.EmbeddedDocumentListField(Video)
     posts = mongoengine.EmbeddedDocumentListField(Post)
     friends = mongoengine.EmbeddedDocumentListField(Friend)
+    last_time_fetch = mongoengine.DateTimeField()
+    last_finish_fetch = mongoengine.DateTimeField()
+    fetching_status = mongoengine.BooleanField(default=False)
 
     meta = {'queryset_class': UsersQuerySet}
 

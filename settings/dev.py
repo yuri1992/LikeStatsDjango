@@ -1,6 +1,7 @@
 from .base import *
 import sys
 import os
+from mongoengine import connect
 
 
 CELERY_CONFIG_MODULE = {
@@ -13,6 +14,13 @@ CELERY_CONFIG_MODULE = {
     },
 }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.dummy'
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 DATABASE_MONGO = {
     'MONGO_HOST': 'mongodb://localhost/test',
@@ -25,3 +33,4 @@ DATABASE_MONGO = {
 URL_SITE = "http://local.ynet.co.il:8080/"
 
 register_mongo_connection(DATABASE_MONGO)
+connect(alias='default')

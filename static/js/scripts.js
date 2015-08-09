@@ -51,7 +51,7 @@
             }
         },
         onListenerSuccess :function(data) {
-            if (data) {
+            if (typeof data.fetching_status != 'undefined' && data.fetching_status == false) {
                 clearInterval(this._intervalId);
                 this.user_data = data;
                 this.affects_after();

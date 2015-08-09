@@ -61,7 +61,6 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,15 +78,7 @@ WSGI_APPLICATION = 'wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'facebook_likes',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-    }
-}
+
 
 
 # Internationalization

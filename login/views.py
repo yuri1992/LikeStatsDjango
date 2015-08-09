@@ -11,7 +11,7 @@ from bson import ObjectId, Code
 from django.core.serializers.json import DjangoJSONEncoder
 import tasks
 import json
-
+import datetime
 
 connect(alias='default')
 
@@ -21,6 +21,8 @@ class JsonMongodbEncoder(DjangoJSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
+        elif isinstance(o, datetime.datetime):
+            return o.strftime('%d/%m/%y %H:%M:%S')
         return super(JsonMongodbEncoder, self).defualt(o)
 
 
@@ -45,6 +47,23 @@ def recount(fb_id):
     tasks.fetch_all.apply_async([fb_id])
 
 
+
+def user(request,fb_id):
+    res = Users.objects.\
+            filter(fb_id=fb_id).\
+            exclude('access_token').\
+            fields(slice__photos=1).\
+            fields(slice__posts=1).\
+            fields(slice__videos=1).\
+            first()
+    if res:
+        res = res.to_mongo()
+    else:
+        return JsonResponse({})
+    return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
+
+
+
 def stats(request, fb_id):
     if request.META['REQUEST_METHOD'] == 'POST' or 1 == 1:
         res = {}
@@ -54,7 +73,7 @@ def stats(request, fb_id):
             fields(slice__photos=10).\
             fields(slice__posts=10).\
             fields(slice__videos=10).\
-            only('name', 'link', 'photos', 'videos', 'posts').\
+            only('name', 'link','fetching_status','photos', 'videos', 'posts').\
             first()
 
         if res:

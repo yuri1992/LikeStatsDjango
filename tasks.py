@@ -4,6 +4,7 @@ from login.models import Users
 from facebook_sdk.facebook_request import GraphAPIRequest
 from facebook_sdk.facebook_helper import GraphAPIHelper
 from mongoengine import connect
+from datetime import datetime
 import os
 
 
@@ -13,7 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.dev')
 app.conf.update(settings.CELERY_CONFIG_MODULE)
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-print app.conf.CELERY_RESULT_BACKEND
+
 
 @app.task
 def fetch_photos_data(fb_id):
@@ -65,16 +66,28 @@ def fetch_friend_list(fb_id):
 
 @app.task
 def fetch_all(fb_id):
-    chord(
-        group(fetch_photos_data(fb_id),
-              fetch_posts_data(fb_id),
-              fetch_videos_data(fb_id)
-              # fetch_friend_list(fb_id)
-              ),
-        group(
-            sotring(fb_id),
-            aggregate_likes(fb_id))
-    )
+    user = Users.objects.filter(fb_id=fb_id).first()
+    if user and not user.fetching_status:
+        user.update(
+            last_time_fetch=datetime.now(),
+            fetching_status=True)
+
+        chord(
+            group(fetch_photos_data(fb_id),
+                  fetch_posts_data(fb_id),
+                  fetch_videos_data(fb_id)
+                  # fetch_friend_list(fb_id)
+                  ),
+            group(
+                sotring(fb_id),
+                aggregate_likes(fb_id))
+        )
+
+        user.fetching_status = False
+        user.last_finish_fetch = datetime.now()
+        user.save()
+        
+    
 
 
 @app.task
