@@ -132,7 +132,8 @@ class UsersQuerySet(mongoengine.QuerySet):
                         if (typeof b.likes.summary != 'undefined' && typeof a.likes.summary != 'undefined')
                            return b.likes.summary.total_count - a.likes.summary.total_count
                        });
-                       db[collection].update(query,{$set: {photos:sorted}})
+                       //db[collection].update(query,{$set: {photos:sorted}})
+                       db['likes_stats'].update({'value':value[~fb_id]},{$set: {sorted_photos:sorted}})
                     }
                     if (value[~videos].length > 0) {
                        var sorted = value[~videos].sort(function(a,b) {
@@ -163,6 +164,8 @@ class Users(mongoengine.DynamicDocument):
     last_name = mongoengine.StringField()
     gender = mongoengine.StringField()
     link = mongoengine.URLField()
+    picture = mongoengine.DictField(name='profile_photo')
+    cover = mongoengine.DictField(name='cover_photo')
     access_token = mongoengine.StringField()
     access_token_expires = mongoengine.IntField()
     photos = mongoengine.EmbeddedDocumentListField(Photo)
@@ -183,8 +186,9 @@ class Stats(mongoengine.EmbeddedDocument):
     videos = mongoengine.IntField()
     posts = mongoengine.IntField()
     top_likers = mongoengine.ListField()
-    # sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
-    # sorted_posts = mongoengine.EmbeddedDocumentListField(Post)
+    sorted_videos = mongoengine.EmbeddedDocumentListField(Video)
+    sorted_posts = mongoengine.EmbeddedDocumentListField(Post)
+    sorted_photos = mongoengine.EmbeddedDocumentListField(Photo)
 
 
 class Likes_Stats(mongoengine.Document):

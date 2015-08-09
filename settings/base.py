@@ -110,6 +110,8 @@ STATICFILES_DIRS = (
 )
 
 
+USER_PROFILES_FIEDLS='id,name,cover,gender,location,locale,link,picture'
+
 def register_mongo_connection(db):
     register_connection(
         'default',

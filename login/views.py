@@ -73,7 +73,7 @@ def stats(request, fb_id):
             fields(slice__photos=10).\
             fields(slice__posts=10).\
             fields(slice__videos=10).\
-            only('name', 'link','fetching_status','photos', 'videos', 'posts').\
+            only('name', 'link','fetching_status','photos', 'videos', 'posts','profile_photo','cover').\
             first()
 
         if res:

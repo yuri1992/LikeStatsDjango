@@ -36,10 +36,14 @@ class FacebookLoginHandler(object):
         if 'code' in self._request.GET:
             code = self._request.GET['code']
             res = self.get_access_token_from_code(code)
+            args = {
+                'fields': settings.USER_PROFILES_FIEDLS
+            }
             if 'error' not in res and 'access_token' in res:
                 access_token = res['access_token']
                 res['user_data'] = GraphAPIRequest(
-                    access_token, '/me').get().response
+                    access_token, '/me', args=args).get().response
+                print res['user_data']
                 fb_id = res['user_data']['id']
 
                 self._set_login_session(res)
