@@ -39,7 +39,7 @@ def login(request):
         res.update({
             'fb_id': login_status.user_data.fb_id,
         })
-        recount(login_status.user_data.fb_id)
+        #recount(login_status.user_data.fb_id)
         return render_to_response('user.html', res)
 
 
@@ -77,9 +77,9 @@ def stats(request, fb_id):
         res = Users.objects.\
             filter(fb_id=fb_id).\
             exclude('access_token').\
-            fields(slice__photos=10).\
-            fields(slice__posts=10).\
-            fields(slice__videos=10).\
+            fields(slice__photos=5).\
+            fields(slice__posts=5).\
+            fields(slice__videos=5).\
             only('name', 'link', 'fetching_status', 'photos', 'videos', 'posts', 'profile_photo', 'cover').\
             first()
 
@@ -91,9 +91,9 @@ def stats(request, fb_id):
         likes_stats = Likes_Stats.objects.filter(value__fb_id=fb_id).\
             exclude('id').\
             fields(slice__value__top_likers=10).\
-            fields(slice__value__sorted_videos=10).\
-            fields(slice__value__sorted_posts=10).\
-            fields(slice__value__sorted_photos=10).\
+            fields(slice__value__sorted_videos=5).\
+            fields(slice__value__sorted_posts=5).\
+            fields(slice__value__sorted_photos=5).\
             first()
         if likes_stats:
             res['stats'] = likes_stats.to_mongo()['value']

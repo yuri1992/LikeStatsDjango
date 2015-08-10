@@ -120,6 +120,16 @@
                         'title':'Total Likes',
                         'templateId':'#entry-likes-list-photos',
                     },
+                    'sorted_videos':{
+                        'icon':'fa fa-thumbs-o-up',
+                        'title':'Total Likes',
+                        'templateId':'#entry-likes-list-videos',
+                    },
+                    'sorted_posts':{
+                        'icon':'fa fa-thumbs-o-up',
+                        'title':'Total Likes',
+                        'templateId':'#entry-likes-list-posts',
+                    },
                 };
                 
                 for (var field in fields) {
@@ -181,6 +191,23 @@
             context[i].profile = profile ;
             //context[i].created_time = new Date(context[i].created_time)
             ret = ret + options.fn(context[i]);
+        }
+
+        return ret;
+    });
+
+    Handlebars.registerHelper('posts', function(context) {
+        options = arguments[arguments.length - 1];
+        var ret = "";
+
+        for(var i=0, j=context.length; i<j; i++) {
+            
+            var arr = {
+                'post_id' : context[i].post_id.split('_')[1],
+                'user_id' : context[i].post_id.split('_')[0]
+            }
+            console.log(arr)
+            ret = ret + options.fn(arr);
         }
 
         return ret;

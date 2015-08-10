@@ -109,6 +109,49 @@
         </div>
     </script>
 
+    <script id="entry-likes-list-videos" type="text/x-handlebars-template">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-box photos">
+                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="center-panel">
+                    {% templatetag openvariable %}#each value user_data{% templatetag closevariable %}
+                        <div class="comment">
+                            <div class='header'>
+                                <img src="{% templatetag openvariable %}profile.profile_photo.data.url{% templatetag closevariable %}">
+                                <div class="info">
+                                    <span class="profile-name">
+                                        {% templatetag openvariable %}profile.name{% templatetag closevariable %}
+                                    </span>
+
+                                    <span class="date">
+
+                                        {% templatetag openvariable %}created_time{% templatetag closevariable %}
+                                    </span>
+                                </div>
+                                <div class='small-likes'>
+                                <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}likes.summary.total_count{% templatetag closevariable %}</i>
+                                </div>
+                            </div>
+                            <div class='text'>
+
+                           {% templatetag openvariable %}name{% templatetag closevariable %}
+                            </div>
+                            <div class='video'>
+                               {% templatetag openbrace %}{% templatetag openvariable %}embed_html{% templatetag closevariable %}{% templatetag closebrace %}
+                            </div>
+                           
+                            
+                        </div>
+                    {% templatetag openvariable %}/each{% templatetag closevariable %}
+                </div>
+                <div class="bottom-panel">
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
 
     <script id="entry-likes-list-posts" type="text/x-handlebars-template">
         <div class="col-lg-12 col-sm-12">
@@ -116,17 +159,12 @@
                 <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
                 <div class="center-panel">
 
-                    {% templatetag openvariable %}#each value{% templatetag closevariable %}
+                    {% templatetag openvariable %}#posts value{% templatetag closevariable %}
                         <li class="comment">
 
-                        <div class="fb-post" data-href="https://www.facebook.com/1042183372/posts/10205924650929036" data-width="500">
-                             <div class="fb-xfbml-parse-ignore">
-                                 <blockquote cite="https://www.facebook.com/beroshahla/posts/10205924650929036">Posted by <a href="#" role="button">Yuri Ritvin</a> on&nbsp;<a href="https://www.facebook.com/beroshahla/posts/10205924650929036">Tuesday, July 21, 2015</a>
-                                 </blockquote>
-                            </div>
-                        </div>
+                        <div class="fb-post" data-href="https://www.facebook.com/{% templatetag openvariable %}user_id{% templatetag closevariable %}/posts/{% templatetag openvariable %}post_id{% templatetag closevariable %}" data-width="500"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/{% templatetag openvariable %}user_id{% templatetag closevariable %}/posts/{% templatetag openvariable %}post_id{% templatetag closevariable %}">Posted by <a href="#" role="button">Yuri Ritvin</a> on&nbsp;<a href="https://www.facebook.com/{% templatetag openvariable %}user_id{% templatetag closevariable %}/posts/{% templatetag openvariable %}post_id{% templatetag closevariable %}">Monday, July 27, 2015</a></blockquote></div></div>
                         </li>
-                    {% templatetag openvariable %}/each{% templatetag closevariable %}
+                    {% templatetag openvariable %}/posts{% templatetag closevariable %}
                 </div>
                 <div class="bottom-panel">
                 </div>

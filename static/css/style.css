@@ -264,3 +264,8 @@ body {
     width:100%;
     height:100%;
 }
+
+.panel-box.photos .center-panel .comment iframe{
+      max-width: 470px;
+  max-height: 352px;
+}
