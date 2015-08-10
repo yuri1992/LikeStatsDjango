@@ -43,15 +43,20 @@
 
     <script id="entry-likes-list" type="text/x-handlebars-template">
         <div class="col-lg-12 col-sm-12">
-            <div class="panel panel-box">
+            <div class="panel panel-box likes-list">
                 <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
                 <div class="center-panel">
                     {% templatetag openvariable %}#each value{% templatetag closevariable %}
                         <li class="comment">
-                            <img src="{% templatetag openvariable %}pic_small{% templatetag closevariable %}">
-                            {% templatetag openvariable %}name{% templatetag closevariable %}
+                            <div class='profile'>
+                                <img src="{% templatetag openvariable %}pic_small{% templatetag closevariable %}">
+                                <span class='name'>
+                                {% templatetag openvariable %}name{% templatetag closevariable %}
+                                </span>
+                            </div>
+                            <div class='likes'>
                             <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}total_likes{% templatetag closevariable %}</i>
-                            
+                            </div>
                         </li>
                     {% templatetag openvariable %}/each{% templatetag closevariable %}
                 </div>

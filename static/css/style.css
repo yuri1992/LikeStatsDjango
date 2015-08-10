@@ -202,6 +202,16 @@ body {
     height: 100px;
 }
 
+.panel-box.likes-list .center-panel .comment .profile{
+    
+}
+.panel-box.likes-list .center-panel .comment .likes{
+    
+}
+.panel-box.likes-list .center-panel .comment .profile .name{
+    display:block;
+}
+
 .panel-box.photos .center-panel .comment{
     list-style: none;
     display: inline-table;

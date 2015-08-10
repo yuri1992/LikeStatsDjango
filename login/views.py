@@ -44,8 +44,8 @@ def login(request):
 
 
 def recount(fb_id):
-    pass
-    # tasks.fetch_all.apply_async([fb_id])
+    #pass
+    tasks.fetch_all.apply_async([fb_id])
 
 
 def sort_elements_user(request, fb_id):
