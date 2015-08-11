@@ -103,7 +103,7 @@ class GraphAPIHelper(object):
             '/debug_token',
             params).get()
 
-        if 'is_valid' in res.response['data']:
+        if 'data' in res.response and 'is_valid' in res.response['data']:
             return bool(res.response['data']['is_valid'])
         return False
 

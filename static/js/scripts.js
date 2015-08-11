@@ -1,7 +1,8 @@
 (function($) {
     var listener = function() {
-        this.warper = jQuery('#login');
+        this.warper = jQuery('#continer');
         this.link = jQuery('#count');
+        this._login_el = jQuery('#login');
         this._userId = jQuery('#fb_id').val();
         this._template = jQuery('#box-template').clone(true);
         this._init();
@@ -14,9 +15,24 @@
             this.affects_before();
             this.listener();
         },
+        _initilaSharingEvents :function() {
+            jQuery('.sharing_button').click(function(e) {
+                var el = jQuery(this);
+                var url = el.attr('data-url-share');
+                if (typeof url != 'undefined') {
+                    FB.ui({
+                          method: 'feed',
+                          description: 'asdsadsa',
+                          caption:'asasdasd',
+                          href: url,
+                    }, function(response){
+                        
+                    });
+                }
+            })
+        },
         listener:function() {
             var self = this;
-
             this._intervalId = setInterval(function() {
                     self.onListen();
                 }, 3000);
@@ -34,7 +50,6 @@
                             },
                         dataType:'JSON',
                         success:function(data) {
-                            console.log('success');
                             self.onListenerSuccess(data);
                         },
 
@@ -62,14 +77,12 @@
         affects_before:function() {
             var self = this;
             this.warper.queue('before_result');
-            function before () {
-                self.warper.fadeOut(1000,function() {
+            (function before () {
+                self._login_el.fadeOut(1000,function() {
                     self.warper.html(jQuery('<i class="text-center fa fa-refresh  fa-5x fa-spin"></i>'))
                 })
                 self.warper.fadeIn(1000);
-            }
-            before();
-            
+            })();        
         },  
         affects_after:function() {
             var self = this;
@@ -142,11 +155,8 @@
                         self.warper.append(el)
                     }
                 }
-
-
                 
-                
-                
+                self._initilaSharingEvents();                
             });
 
 
@@ -212,4 +222,6 @@
         },10);
         return ret;
     });
+
+
 })(jQuery);

@@ -43,7 +43,6 @@ class FacebookLoginHandler(object):
                 access_token = res['access_token']
                 res['user_data'] = GraphAPIRequest(
                     access_token, '/me', args=args).get().response
-                print res['user_data']
                 fb_id = res['user_data']['id']
 
                 self._set_login_session(res)

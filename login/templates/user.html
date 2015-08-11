@@ -2,20 +2,23 @@
 
 {% block main_content %}
     <div class="continer">
-    <div id="login" class='center-screen col-lg-8 col-sm-offset-4 col-sm-10 col-sm-offset-1'>
-        <h1 class='text-center'>How Much Likes You Worth ? </h1>
-        <div class="fHow Much Likes You Worth ?How Much Likes You Worth ?orm-group" id="warper">        
-                <a class="btn btn-lg btn-block btn-hmluw" id="count"
-                        href="">
-                    Count My Likes
-                </a>
+        <div id="login" class='center-screen col-lg-8'>
+            <h1 class='text-center'>How Much Likes You Worth ? </h1>
+            <div class="fHow Much Likes You Worth ?How Much Likes You Worth ?orm-group" id="warper">        
+                    <a class="btn btn-lg btn-block btn-hmluw" id="count"
+                            href="">
+                        Count My Likes
+                    </a>
+            </div>
+            <input type='hidden' id='fb_id' name='fb_id' value='{{fb_id}}'/>
+            {% csrf_token %}
         </div>
-        <input type='hidden' id='fb_id' name='fb_id' value='{{fb_id}}'/>
-        {% csrf_token %}
-    </div>
-    <div id="result">
-    </div>
-    <div id="fb-root"></div>
+        <div id="continer" class='col-md-offset-2 col-md-8'>
+        
+        </div>
+        <div id="result">
+        </div>
+        <div id="fb-root"></div>
 
 
 
@@ -29,7 +32,7 @@
     <script src="{% static "js/scripts.js" %}"></script>
 
     <script id="entry-likes-number" type="text/x-handlebars-template">
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-6 col-xs-12">
             <div class="panel panel-box">
                 <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
                 <div class="center-panel">
@@ -43,11 +46,13 @@
 
     <script id="entry-likes-list" type="text/x-handlebars-template">
         <div class="col-lg-12 col-sm-12">
+            <h2> Your Top Likers </h2>
             <div class="panel panel-box likes-list">
-                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
-                <div class="center-panel">
+                <div class="panel-header"></div>
+                <div class="center-panel col-md-12 col-xs-12">
                     {% templatetag openvariable %}#each value{% templatetag closevariable %}
-                        <li class="comment">
+                        <li class="comment col-lg-4 col-md-4 col-xs-12">
+                            <div class="number number-1"></div>
                             <div class='profile'>
                                 <img src="{% templatetag openvariable %}pic_small{% templatetag closevariable %}">
                                 <span class='name'>
@@ -69,9 +74,10 @@
 
 
     <script id="entry-likes-list-photos" type="text/x-handlebars-template">
-        <div class="col-lg-12 col-sm-12">
+        <div class="col-lg-12 col-xs-12">
+            <h2> Your Most Liked Photos </h2>
             <div class="panel panel-box photos">
-                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="panel-header"></div>
                 <div class="center-panel">
                     {% templatetag openvariable %}#each value user_data{% templatetag closevariable %}
                         <div class="comment">
@@ -89,6 +95,11 @@
                                 </div>
                                 <div class='small-likes'>
                                 <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}likes.summary.total_count{% templatetag closevariable %}</i>
+                                
+                                <div data-url-share="https://www.facebook.com/photo.php?fbid={% templatetag openvariable %}photo_id{% templatetag closevariable %}" class="sharing_button btn btn-sm btn-block btn-hmluw">
+                                    <i class="fa fa-facebook"></i>
+                                    Share
+                                </div>
                                 </div>
                             </div>
                             <div class='text'>
@@ -110,9 +121,10 @@
     </script>
 
     <script id="entry-likes-list-videos" type="text/x-handlebars-template">
-        <div class="col-lg-12 col-sm-12">
+        <div class="col-lg-12 col-xs-12">
+            <h2> Your Most Liked Videos </h2>
             <div class="panel panel-box photos">
-                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="panel-header"></div>
                 <div class="center-panel">
                     {% templatetag openvariable %}#each value user_data{% templatetag closevariable %}
                         <div class="comment">
@@ -130,6 +142,10 @@
                                 </div>
                                 <div class='small-likes'>
                                 <i class="fa fa fa-thumbs-o-up">{% templatetag openvariable %}likes.summary.total_count{% templatetag closevariable %}</i>
+                                    <div data-url-share="https://www.facebook.com/video.php?fbid={% templatetag openvariable %}photo_id{% templatetag closevariable %}" class="sharing_button btn btn-sm btn-block btn-hmluw">
+                                        <i class="fa fa-facebook"></i>
+                                        Share
+                                    </div>
                                 </div>
                             </div>
                             <div class='text'>
@@ -137,6 +153,7 @@
                            {% templatetag openvariable %}name{% templatetag closevariable %}
                             </div>
                             <div class='video'>
+                                <div class="play-cursor"><i class="fa fa-play fa-6"></i></div>
                                {% templatetag openbrace %}{% templatetag openvariable %}embed_html{% templatetag closevariable %}{% templatetag closebrace %}
                             </div>
                            
@@ -154,9 +171,10 @@
 
 
     <script id="entry-likes-list-posts" type="text/x-handlebars-template">
-        <div class="col-lg-12 col-sm-12">
+        <div class="col-lg-12 col-xs-12">
+            <h2> Your Most Liked Posts </h2>
             <div class="panel panel-box photos">
-                <div class="panel-header">{% templatetag openvariable %}title{% templatetag closevariable %}</div>
+                <div class="panel-header"></div>
                 <div class="center-panel">
 
                     {% templatetag openvariable %}#posts value{% templatetag closevariable %}

@@ -1,6 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto);
 
-
+h2 {
+    margin:0px;
+    margin-bottom:10px;
+}
 .nav {
 	padding-right: 0;
 }
@@ -166,11 +169,11 @@ body {
 	background-color: #fff;
 	border: 1px solid transparent;
 	border-radius: 4px;
-
+    overflow:auto;
 	color:#28282E;
 }
 .panel-box .panel-header{
-	padding:5px 5px 0px 12px;
+	padding:5px 5px 10px 12px;
 	text-align:left;
 }
 .panel-box .center-panel {
@@ -197,9 +200,6 @@ body {
 }
 .panel-box .center-panel li{
 	list-style: none;
-    display: inline-table;
-    width: 30%;
-    height: 100px;
 }
 
 .panel-box.likes-list .center-panel .comment .profile{
@@ -228,6 +228,7 @@ body {
 .panel-box.photos .center-panel .comment .header  img{
    width:40px;
    float: left;
+   height: 40px;
 }
 .panel-box.photos .center-panel .comment .header {
    text-align:left;
@@ -268,4 +269,44 @@ body {
 .panel-box.photos .center-panel .comment .video > iframe{
       max-width: 470px;
   max-height: 352px;
+}
+
+.panel-box.photos .center-panel .comment .video {
+    position:relative;
+}
+
+.panel-box.photos .center-panel .comment .video .play-cursor{
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    margin: auto;
+    width: 60px;
+    height: 60px;
+    color: #fff;
+    font-size: 60px;
+}
+
+.sharing_button {
+    font-style: initial;
+    font-family: arial;
+    font-size: 12px;
+    padding: 3px;
+    font-weight: bold;
+    width:64px;
+}
+
+.number {
+    background: url('/static/images/numbering.png');
+    width: 53px;
+    height: 56px;
+
+    position: absolute;
+    right: 65px;
+    top: 42px;
+    z-index: 0;
+}
+.number-1 {
+    background-position: 754px -8px;
 }
