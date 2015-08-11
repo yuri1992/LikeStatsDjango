@@ -37,7 +37,23 @@ body {
 	color: #fff;
 	
 }
-
+.loader {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	margin:auto;
+	width:200px;
+	height:90px;
+	text-align:center;
+}
+.loader .info-loading {
+	position: relative;
+	width: 100%;
+	word-wrap: normal;
+	display: block;
+}
 .center-screen {
 	height: 30%;
 	top: 0;
@@ -205,6 +221,11 @@ body {
 .panel-box.likes-list .center-panel .comment .profile{
     
 }
+.panel-box.likes-list .center-panel .comment{
+    height:125px;
+	position: relative;
+	float: left;
+}
 .panel-box.likes-list .center-panel .comment .likes{
     
 }
@@ -226,28 +247,26 @@ body {
 }
 
 .panel-box.photos .center-panel .comment .header  img{
-   width:40px;
+   width:50px;
    float: left;
-   height: 40px;
+   height:50px;
 }
-.panel-box.photos .center-panel .comment .header {
-   text-align:left;
-}
-
 .panel-box.photos .center-panel .comment .text {
    clear: both;
        text-align: left;
 }
+.panel-box.photos .center-panel .comment .header {
+   text-align:left;
+   overflow:auto;
+   height:55px;
+}
 
-.panel-box.photos .center-panel .comment .header span{
-   
-} 
 .panel-box.photos .center-panel .comment .header .profile-name{
     color:#3b5998;
     font-weight: bold;
     font-size: 14px;
-        display: block;
-            line-height: 14px;
+    display: block;
+    line-height: 14px;
 }
 .panel-box.photos .center-panel .comment .header .info{
     color:#9197a3;
@@ -257,9 +276,10 @@ body {
     padding-top:2px;
 }
 .panel-box.photos .center-panel .comment .header .small-likes{
-        float: right;
-    font-size: 30px;
-    line-height: 40px;
+	float: right;
+	font-size: 24px;
+	line-height: 25px;
+	text-align: center;
 }
 .panel-box.photos .center-panel .comment img{
     width:100%;
@@ -280,14 +300,16 @@ body {
     top: 0px;
     bottom: 0px;
     right: 0px;
-    left: 0px;
+  	left: 13px;
     margin: auto;
     width: 60px;
     height: 60px;
     color: #fff;
     font-size: 60px;
 }
-
+.continer {
+	padding-top:15px;
+}
 .sharing_button {
     font-style: initial;
     font-family: arial;
@@ -302,11 +324,44 @@ body {
     width: 53px;
     height: 56px;
 
-    position: absolute;
-    right: 65px;
-    top: 42px;
-    z-index: 0;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	z-index: 0;
 }
 .number-1 {
     background-position: 754px -8px;
+}
+.number-2 {
+    background-position: 677px -8px;
+}
+.number-3 {
+    background-position: 608px -7px;
+}
+.number-4 {
+    background-position: 536px -6px;
+}
+.number-5 {
+    background-position: 465px -8px;
+}
+.number-6 {
+    background-position: 392px -7px;
+}
+.number-7 {
+    background-position: 320px -7px;
+}
+.number-8 {
+    background-position: 250px -5px;
+    height:59px;
+}
+.number-9 {
+	background-position: 180px -6px;
+	height: 59px;
+}
+.number-10 {
+	background-position: 106px -6px;
+	height: 59px;
+	width: 100px;
+
 }

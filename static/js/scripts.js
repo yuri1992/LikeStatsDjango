@@ -12,7 +12,7 @@
         _init:function() {
             this._ajaxFinished = true;
             this.token = $('input[name=csrfmiddlewaretoken]').val();
-            this.affects_before();
+            this.beforeEffects();
             this.listener();
         },
         _initilaSharingEvents :function() {
@@ -68,30 +68,57 @@
         onListenerSuccess :function(data) {
             if (typeof data.stats != 'undefined') {
                 clearInterval(this._intervalId);
+                clearInterval(this._messagingInterval);
                 this.user_data = data;
-                this.affects_after();
+                this.afterEffects();
             } else {
                 this._ajaxFinished = true;
             }
         },
-        affects_before:function() {
+        _loadingMessaging:function(i) {
+            var messaging = [
+                'Starting Fetch Proccess',
+                'Fetching Photos...',
+                'Fetching Videos...',
+                'Fetching Posts...',
+                'Analyzing All Data...',
+                'Optimizing The Page'];
+            if (typeof messaging[i] != 'undefined')
+                return messaging[i];
+            return 'Final Proccessing...';
+        },
+        _loadingInfo:function() {
+            var self = this;
+            var incr = 0;
+            this._messagingInterval = setInterval(function() {
+                // will change the message of loading process every 2 seconds
+                var msg = self._loadingMessaging(incr);
+                incr++;
+                self.loadingElement.find('.info-loading').html(msg);
+            },3000);
+        },
+        beforeEffects:function() {
             var self = this;
             this.warper.queue('before_result');
             (function before () {
                 self._login_el.fadeOut(1000,function() {
-                    self.warper.html(jQuery('<i class="text-center fa fa-refresh  fa-5x fa-spin"></i>'))
+                    self.loadingElement = jQuery('<div class="loader"><i class="text-center fa fa-refresh  fa-5x fa-spin"></i><span class="info-loading"></span></div>');
+                    self._loadingInfo();
+                    jQuery('body').append(self.loadingElement);
                 })
                 self.warper.fadeIn(1000);
             })();        
         },  
-        affects_after:function() {
+        afterEffects:function() {
             var self = this;
             this.warper.queue('after_result');
-            this.warper.animate({'height':'90%'},1000);
             this.warper.fadeOut(1000,function() {
                 jQuery(this).html('')
                 self.buildHtml()
-                jQuery(this).fadeIn(1000);
+                jQuery(this).fadeIn(1000, function() {
+                    jQuery('.loader').remove();
+                });
+                
             });
         },
         _buildTemplateHtml :function(id,data) {
@@ -199,7 +226,7 @@
 
         for(var i=0, j=context.length; i<j; i++) {
             context[i].profile = profile ;
-            //context[i].created_time = new Date(context[i].created_time)
+            context[i].position = i + 1;
             ret = ret + options.fn(context[i]);
         }
 
@@ -209,12 +236,10 @@
         options = arguments[arguments.length - 1];
         var ret = "";   
         for(var i=0, j=context.length; i<j; i++) {
-            
             var arr = {
                 'post_id' : context[i].post_id.split('_')[1],
                 'user_id' : context[i].post_id.split('_')[0]
             }
-            
             ret = ret + options.fn(arr);
         }
         setTimeout(function() {
