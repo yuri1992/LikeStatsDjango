@@ -195,21 +195,21 @@
 
         return ret;
     });
-
     Handlebars.registerHelper('posts', function(context) {
         options = arguments[arguments.length - 1];
-        var ret = "";
-
+        var ret = "";   
         for(var i=0, j=context.length; i<j; i++) {
             
             var arr = {
                 'post_id' : context[i].post_id.split('_')[1],
                 'user_id' : context[i].post_id.split('_')[0]
             }
-            console.log(arr)
+            
             ret = ret + options.fn(arr);
         }
-
+        setTimeout(function() {
+            FB.XFBML.parse();
+        },10);
         return ret;
     });
 })(jQuery);
