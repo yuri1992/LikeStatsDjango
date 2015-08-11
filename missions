@@ -1,6 +1,7 @@
 task for deployment:
 
-	1.fetch Also the Profile Picture Of User. -> Donde
-	2.find a way to show posts and videos	
-	2.Sharing button for each pice of information
-	3.Check Responsive Behavior 
+	1.Find Way To Show Posts
+	2.Premissons Shortage handling
+	3.Add links to profiles Of people
+	4.Add Sharing Buttons at Top
+	5.Screenphotos Maker Base On Html gtkp2png
