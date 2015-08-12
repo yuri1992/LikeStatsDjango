@@ -19,11 +19,6 @@
         <div id="result">
         </div>
         <div id="fb-root"></div>
-
-
-
-   
-
     </div>  
 {% endblock %}
 
@@ -57,7 +52,9 @@
                             <div class='profile'>
                                 <img src="{% templatetag openvariable %}pic_small{% templatetag closevariable %}">
                                 <span class='name'>
-                                {% templatetag openvariable %}name{% templatetag closevariable %}
+                                    <a href="http://facebook.com/{% templatetag openvariable %}id{% templatetag closevariable %}" target="_blank">
+                                        {% templatetag openvariable %}name{% templatetag closevariable %}
+                                    </a>
                                 </span>
                             </div>
                             <div class='likes'>
@@ -87,9 +84,9 @@
                                 <img src="{% templatetag openvariable %}profile.profile_photo.data.url{% templatetag closevariable %}">
                                 <div class="info">
                                     <span class="profile-name">
-                                        {% templatetag openvariable %}profile.name{% templatetag closevariable %}
+                                        <a href="http://facebook.com/{% templatetag openvariable %}profile.id{% templatetag closevariable %}" target="_blank">{% templatetag openvariable %}profile.name{% templatetag closevariable %}</a>
                                     </span>
-
+ 
                                     <span class="date">
 
                                         {% templatetag openvariable %}created_time{% templatetag closevariable %}
@@ -134,7 +131,7 @@
                                 <img src="{% templatetag openvariable %}profile.profile_photo.data.url{% templatetag closevariable %}">
                                 <div class="info">
                                     <span class="profile-name">
-                                        {% templatetag openvariable %}profile.name{% templatetag closevariable %}
+                                        <a href="http://facebook.com/{% templatetag openvariable %}profile.id{% templatetag closevariable %}" target="_blank">{% templatetag openvariable %}profile.name{% templatetag closevariable %}</a>
                                     </span>
 
                                     <span class="date">

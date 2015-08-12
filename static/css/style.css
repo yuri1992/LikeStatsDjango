@@ -231,6 +231,7 @@ body {
 }
 .panel-box.likes-list .center-panel .comment .profile .name{
     display:block;
+  	padding-top: 5px;
 }
 
 .panel-box.photos .center-panel .comment{
@@ -261,6 +262,7 @@ body {
    height:55px;
 }
 
+.comment .profile .name > a,
 .panel-box.photos .center-panel .comment .header .profile-name{
     color:#3b5998;
     font-weight: bold;

@@ -9,9 +9,11 @@ from mongoengine import connect
 from models import Users, Stats, Likes_Stats
 from bson import ObjectId, Code
 from django.core.serializers.json import DjangoJSONEncoder
+from webkit2png import webkit2png
 import tasks
 import json
 import datetime
+
 
 connect(alias='default')
 
@@ -39,20 +41,27 @@ def login(request):
         res.update({
             'fb_id': login_status.user_data.fb_id,
         })
-        #recount(login_status.user_data.fb_id)
+        # recount(login_status.user_data.fb_id)
         return render_to_response('user.html', res)
 
 
 def recount(fb_id):
-    #pass
+    # pass
     tasks.fetch_all.apply_async([fb_id])
+
+
+def make_image(request):
+    screen_shorter = webkit2png.WebkitRenderer()
+    with open('f.png','w+') as f:
+        screen_shorter.render_to_file("http://google.com",f)
+
+    return JsonResponse({})
 
 
 def sort_elements_user(request, fb_id):
     res = Users.objects.\
         filter(fb_id=fb_id).\
         sort_elements()
-    print res
     return JsonResponse(res, encoder=JsonMongodbEncoder, safe=False)
 
 
