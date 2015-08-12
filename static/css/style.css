@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto);
 
 h2 {
     margin:0px;
@@ -31,7 +30,7 @@ th {
 
 body {
 	background-color: #0866c6;
-	font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 	line-height: 24px;
 	color: #fff;
@@ -263,7 +262,7 @@ body {
 }
 
 .comment .profile .name > a,
-.panel-box.photos .center-panel .comment .header .profile-name{
+.panel-box.photos .center-panel .comment .header .profile-name > a{
     color:#3b5998;
     font-weight: bold;
     font-size: 14px;

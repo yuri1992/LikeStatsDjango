@@ -30,7 +30,16 @@ DATABASE_MONGO = {
 }
 
 
+IMAGES = {
+    'small': os.path.join(PROJECT_ROOT, 'static/images/small.png'),
+    'big': '/static/images/big.png'
+}
+FONTS = {
+    'awesome': os.path.join(PROJECT_ROOT, 'static/css/assets/fonts/fontawesome-webfont.ttf'),
+    'dejavu': os.path.join(PROJECT_ROOT, 'static/fonts/arial.ttf'),
+}
+
 URL_SITE = "http://local.ynet.co.il:8080/"
 
 register_mongo_connection(DATABASE_MONGO)
-connect(alias='default')
+connect(alias='default')       

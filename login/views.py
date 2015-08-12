@@ -9,7 +9,7 @@ from mongoengine import connect
 from models import Users, Stats, Likes_Stats
 from bson import ObjectId, Code
 from django.core.serializers.json import DjangoJSONEncoder
-from webkit2png import webkit2png
+from image_maker.api import ImagesMaker
 import tasks
 import json
 import datetime
@@ -51,11 +51,13 @@ def recount(fb_id):
 
 
 def make_image(request):
-    screen_shorter = webkit2png.WebkitRenderer()
-    with open('f.png','w+') as f:
-        screen_shorter.render_to_file("http://google.com",f)
-
-    return JsonResponse({})
+    ImagesMaker.create_small_stat_image({
+        'font_icon': unichr(0xF087),
+        'title': 'My Total Like',
+        'value': '1,000',
+        'image_profile': 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/c113.33.414.414/s50x50/5353_10200578370755373_1977075288_n.jpg?oh=6ed8cec02057e474c1d2139490a39a54&oe=56487D9D&__gda__=1451351050_445fccab167c52b614d93584eb8e601d'
+    })
+    return HttpResponse("<img src='/static/images/1.png'>")
 
 
 def sort_elements_user(request, fb_id):

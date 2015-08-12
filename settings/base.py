@@ -105,6 +105,8 @@ FACEBOOK_APP_ID = "1649266495305734"
 STATIC_URL = '/static/'
 
 
+
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
