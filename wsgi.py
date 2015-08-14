@@ -11,7 +11,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.prod")
 
 #activate_this = '/home/devel/.virtualenvs/test/bin/activate_this.py'
 #execfile(activate_this, dict(__file__=activate_this))
