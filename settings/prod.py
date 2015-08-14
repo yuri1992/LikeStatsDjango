@@ -1,6 +1,8 @@
 from .base import *
 import sys
 import os
+from mongoengine import connect
+
 
 BASE_DIR = os.path.join(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__))
