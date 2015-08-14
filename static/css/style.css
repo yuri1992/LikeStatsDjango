@@ -197,6 +197,7 @@ body {
 .panel-box .bottom-panel {
 	padding:7px;
 	 text-align: left;
+	 clear: both;
 }
 .center-panel ul {
 	overflow:auto;
@@ -215,6 +216,11 @@ body {
 }
 .panel-box .center-panel li{
 	list-style: none;
+}
+
+.panel-box.single-stat .center-panel .sharing_button{
+	margin:inherit;
+	float:none;
 }
 
 .panel-box.likes-list .center-panel .comment .profile{

@@ -21,7 +21,7 @@
                 var url = el.attr('data-url-share');
                 if (typeof url != 'undefined') {
                     FB.ui({
-                          method: 'feed',
+                          method: 'share',
                           description: 'asdsadsa',
                           caption:'asasdasd',
                           href: url,

@@ -32,7 +32,7 @@ DATABASE_MONGO = {
 
 IMAGES = {
     'small': os.path.join(PROJECT_ROOT, 'static/images/small.png'),
-    'big': '/static/images/big.png'
+    'top_ten': os.path.join(PROJECT_ROOT, 'static/images/top_ten.png'),
 }
 FONTS = {
     'awesome': os.path.join(PROJECT_ROOT, 'static/css/assets/fonts/fontawesome-webfont.ttf'),

@@ -86,6 +86,8 @@ def fetch_all(fb_id):
         user.last_finish_fetch = datetime.now()
         user.save()
 
+        tumbnails_creator.apply_async([fb_id])
+
 
 @app.task
 def aggregate_likes(fb_id):
@@ -101,3 +103,22 @@ def sotring(fb_id):
         fb_id_list = [fb_id]
     users = Users.objects.filter(fb_id=fb_id)
     users.sort_elements()
+
+
+@app.task
+def tumbnails_creator(fb_id):
+    """
+        get user data from DB
+        making all nesscery images for facebook sharing
+    """
+    user = Users.objects.filter(fb_id=fb_id).\
+            only('name', 'profile_photo').\
+            first()
+    if user:
+        user = user.to_mongo()
+        likes_stats = Likes_Stats.objects.filter(value__fb_id=fb_id).\
+            exclude('id', 'value__sorted_videos', 'value__sorted_posts', 'value__sorted_photos').\
+            fields(slice__value__top_likers=10).\
+            first()
+        if likes_stats:
+            user['stats'] = likes_stats.to_mongo()['value']
