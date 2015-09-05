@@ -177,7 +177,7 @@
                         data = fields[field];
                         data['user_data'] = self.user_data;
                         data['value'] = self.user_data.stats[field];
-                        data['share_path'] = 'http://howmuchlikesyouworth.com/images/'+self.user_data.stats['fb_id']+'_'+field+'.png';
+                        data['share_path'] = 'http://howmuchlikesyouworth.com/static/images/'+self.user_data.stats['fb_id']+'_'+field+'.png';
                         console.log(data)
                         el = self._buildTemplateHtml(data['templateId'], data)
                         self.warper.append(el)
