@@ -34,14 +34,5 @@ DATABASE_MONGO = {
 }
 
 
-IMAGES = {
-    'small': os.path.join(PROJECT_ROOT, 'static/images/small.png'),
-    'top_ten': os.path.join(PROJECT_ROOT, 'static/images/top_ten.png'),
-}
-FONTS = {
-    'awesome': os.path.join(PROJECT_ROOT, 'static/css/assets/fonts/fontawesome-webfont.ttf'),
-    'dejavu': os.path.join(PROJECT_ROOT, 'static/fonts/arial.ttf'),
-}
-
 register_mongo_connection(DATABASE_MONGO)
 connect(alias='default')       

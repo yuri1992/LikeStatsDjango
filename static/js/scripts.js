@@ -165,11 +165,11 @@
                         'title':'Total Likes',
                         'templateId':'#entry-likes-list-videos',
                     },
-                    'sorted_posts':{
+                    /*'sorted_posts':{
                         'icon':'fa fa-thumbs-o-up',
                         'title':'Total Likes',
                         'templateId':'#entry-likes-list-posts',
-                    },
+                    },*/
                 };
                 
                 for (var field in fields) {
@@ -177,6 +177,7 @@
                         data = fields[field];
                         data['user_data'] = self.user_data;
                         data['value'] = self.user_data.stats[field];
+                        data['share_path'] = 'http://howmuchlikesyouworth.com/images/'+self.user_data.stats['fb_id']+'_'+field+'.png';
                         console.log(data)
                         el = self._buildTemplateHtml(data['templateId'], data)
                         self.warper.append(el)

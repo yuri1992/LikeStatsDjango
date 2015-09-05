@@ -6,7 +6,9 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+
 .Python
+*/static/images/*
 env/
 build/
 develop-eggs/

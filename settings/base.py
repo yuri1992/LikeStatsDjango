@@ -16,6 +16,15 @@ import os
 BASE_DIR = os.path.join(os.path.dirname(__file__), '..')
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
 
+IMAGES = {
+    'small': os.path.join(PROJECT_ROOT, 'static/images/background.png'),
+    'top_ten': os.path.join(PROJECT_ROOT, 'static/images/top_three.png'),
+}
+FONTS = {
+    'awesome': os.path.join(PROJECT_ROOT, 'static/css/assets/fonts/fontawesome-webfont.ttf'),
+    'dejavu': os.path.join(PROJECT_ROOT, 'static/fonts/arial.ttf'),
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/

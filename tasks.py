@@ -1,10 +1,11 @@
 from celery import Celery, chord, group
 from django.conf import settings
-from login.models import Users
+from login.models import Users,Likes_Stats
 from facebook_sdk.facebook_request import GraphAPIRequest
 from facebook_sdk.facebook_helper import GraphAPIHelper
 from mongoengine import connect
 from datetime import datetime
+from image_maker.api import ImagesMaker
 import os
 
 
@@ -112,7 +113,7 @@ def tumbnails_creator(fb_id):
         making all nesscery images for facebook sharing
     """
     user = Users.objects.filter(fb_id=fb_id).\
-            only('name', 'profile_photo').\
+            only('fb_id','name', 'profile_photo').\
             first()
     if user:
         user = user.to_mongo()
@@ -122,3 +123,4 @@ def tumbnails_creator(fb_id):
             first()
         if likes_stats:
             user['stats'] = likes_stats.to_mongo()['value']
+        ImagesMaker.create_stats_images(user)
